@@ -18,24 +18,32 @@ class Home extends StatelessWidget {
             children: [
               Column(
                 children: [
-                  Expanded(
-                    flex: 5,
-                    child: Container(
-                      color: const Color.fromRGBO(0, 95, 146, 1),
+                  Container(
+                    decoration: const BoxDecoration(
+                        gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: <Color>[
+                        Color.fromRGBO(28, 59, 112, 1),
+                        Color.fromRGBO(0, 95, 146, 1)
+                      ],
+                    )),
+                    height: MediaQuery.of(context).size.height / 2.5,
+                    // color: const Color.fromRGBO(0, 95, 146, 1),
+                  ),
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width,
+                    height: MediaQuery.of(context).size.height / 7,
+                    child: Image.asset(
+                      'assets/img/curva_colores.png',
+
+                      fit: BoxFit.cover,
+                      //height: 120.0,
                     ),
                   ),
-                  Expanded(
-                    flex: 2,
-                    child: Container(
-                      alignment: Alignment.topCenter,
-                      child: Image.asset(
-                        'assets/img/wave.png',
-                        width: MediaQuery.of(context).size.width,
-                        //height: 120.0,
-                      ),
-                    ),
-                  ),
-                  Expanded(flex: 5, child: Container(color: Colors.white)),
+                  Container(
+                      height: MediaQuery.of(context).size.height / 2.5,
+                      color: Colors.white),
                 ],
               ),
               Column(
@@ -46,15 +54,14 @@ class Home extends StatelessWidget {
                       margin: const EdgeInsets.only(top: 120, bottom: 20),
                       alignment: Alignment.bottomCenter,
                       child: Column(
-                        children: [
+                        children: const [
                           Text(
                             'YOUR NAME',
-                            style: TextStyle(color: Colors.white,
-                            fontSize: 35),
+                            style: TextStyle(color: Colors.white, fontSize: 35),
                           ),
                           Text('correo@email.com',
-                              style: TextStyle(color: Colors.white,
-                              fontSize: 20)),
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 20)),
                         ],
                       ),
                     ),
@@ -72,7 +79,10 @@ class Home extends StatelessWidget {
                             false,
                           ),
                           onPressed: () {
-                            Navigator.push(context, MaterialPageRoute(builder: (context) =>  DailyVisits()));
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => DailyVisits()));
                           }),
                     ),
                   ),
@@ -85,7 +95,7 @@ class Home extends StatelessWidget {
                   Expanded(
                     flex: 3,
                     child: Container(
-                      margin: const EdgeInsets.only( bottom: 60),
+                      margin: const EdgeInsets.only(bottom: 60),
                       width: (MediaQuery.of(context).size.width) / 1.5,
                       child: HomeButtons(
                           whiteBackground: true,
