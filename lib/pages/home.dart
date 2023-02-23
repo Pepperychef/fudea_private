@@ -28,12 +28,12 @@ class Home extends StatelessWidget {
                         Color.fromRGBO(0, 95, 146, 1)
                       ],
                     )),
-                    height: MediaQuery.of(context).size.height / 2.5,
+                    height: MediaQuery.of(context).size.height / 2.4,
                     // color: const Color.fromRGBO(0, 95, 146, 1),
                   ),
                   SizedBox(
                     width: MediaQuery.of(context).size.width,
-                    height: MediaQuery.of(context).size.height / 7,
+                    height: MediaQuery.of(context).size.height / 5,
                     child: Image.asset(
                       'assets/img/curva_colores.png',
 
@@ -41,80 +41,68 @@ class Home extends StatelessWidget {
                       //height: 120.0,
                     ),
                   ),
-                  Container(
-                      height: MediaQuery.of(context).size.height / 2.5,
-                      color: Colors.white),
+                  Expanded(child: Container(
+
+                      color: Colors.white))
+                  ,
                 ],
               ),
               Column(
                 children: [
-                  Expanded(
-                    flex: 4,
-                    child: Container(
-                      margin: const EdgeInsets.only(top: 120, bottom: 20),
-                      alignment: Alignment.bottomCenter,
-                      child: Column(
-                        children: const [
-                          Text(
-                            'YOUR NAME',
-                            style: TextStyle(color: Colors.white, fontSize: 35),
-                          ),
-                          Text('correo@email.com',
-                              style:
-                                  TextStyle(color: Colors.white, fontSize: 20)),
-                        ],
-                      ),
+                  Container(
+                    margin:  EdgeInsets.only(
+                        top: (MediaQuery.of(context).size.width) / 4.5,
+                        bottom: (MediaQuery.of(context).size.width) / 12.5),
+                    alignment: Alignment.bottomCenter,
+                    child: Column(
+                      children:  [
+                        Text(
+                          'YOUR NAME',
+                          style: TextStyle(color: Colors.white, fontSize: (MediaQuery.of(context).size.height) / 26.5),
+                        ),
+                        Text('correo@email.com',
+                            style:
+                            TextStyle(color: Colors.white, fontSize: (MediaQuery.of(context).size.height) / 46.5)),
+                      ],
                     ),
                   ),
-                  Expanded(
-                    flex: 3,
-                    child: Container(
-                      margin: const EdgeInsets.only(bottom: 60),
-                      width: (MediaQuery.of(context).size.width) / 1.5,
-                      child: HomeButtons(
-                          whiteBackground: false,
-                          child: contenidoBoton(
-                            false,
-                            'Visitar Consultas Diarias',
-                            false,
-                          ),
-                          onPressed: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => DailyVisits()));
-                          }),
-                    ),
+                  Container(
+                    margin: EdgeInsets.only(top: (MediaQuery.of(context).size.width) / 15.5),
+                    height: (MediaQuery.of(context).size.height) / 6.5,
+                    width: (MediaQuery.of(context).size.width) / 1.5,
+                    child: HomeButtons(
+                        whiteBackground: false,
+                        child: contenidoBoton(
+                          false,
+                          'Visitar Consultas Diarias',
+                          false,
+                            (MediaQuery.of(context).size.height) / 36.5
+                        ),
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => DailyVisits()));
+                        }),
                   ),
-                  Expanded(
-                    flex: 3,
-                    child: Container(
-                      alignment: Alignment.topCenter,
-                    ),
+
+                  Container(
+                    margin:  EdgeInsets.only(top: (MediaQuery.of(context).size.height) / 5),
+                    width: (MediaQuery.of(context).size.width) / 1.5,
+                    height: (MediaQuery.of(context).size.height) / 6.5,
+                    child: HomeButtons(
+                        whiteBackground: true,
+                        child: contenidoBoton(
+                          false,
+                          'Enviar Progreso del Dia',
+                          true,
+                            (MediaQuery.of(context).size.height) / 36.5
+                        ),
+                        onPressed: () {
+                          //Navigator.push(context, route)
+                        }),
                   ),
-                  Expanded(
-                    flex: 3,
-                    child: Container(
-                      margin: const EdgeInsets.only(bottom: 60),
-                      width: (MediaQuery.of(context).size.width) / 1.5,
-                      child: HomeButtons(
-                          whiteBackground: true,
-                          child: contenidoBoton(
-                            false,
-                            'Enviar Progreso del Dia',
-                            true,
-                          ),
-                          onPressed: () {
-                            //Navigator.push(context, route)
-                          }),
-                    ),
-                  ),
-                  Expanded(
-                    flex: 3,
-                    child: Container(
-                      alignment: Alignment.topCenter,
-                    ),
-                  ),
+
                 ],
               )
             ],

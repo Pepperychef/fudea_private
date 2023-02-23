@@ -19,12 +19,20 @@ class LoginBasic extends StatelessWidget {
               Column(
                 children: [
                   Container(
-                    height: MediaQuery.of(context).size.height / 3,
-                    color: const Color.fromRGBO(0, 95, 146, 1),
+                    height: MediaQuery.of(context).size.height / 2.7,
+                    decoration: const BoxDecoration(
+                        gradient: LinearGradient(
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                          colors: <Color>[
+                            Color.fromRGBO(28, 59, 112, 1),
+                            Color.fromRGBO(0, 95, 146, 1)
+                          ],
+                        )),
                   ),
                   SizedBox(
                     width: MediaQuery.of(context).size.width,
-                    height: MediaQuery.of(context).size.height / 7,
+                    height: MediaQuery.of(context).size.height / 5,
                     child: Image.asset(
                       'assets/img/curva_colores.png',
 
@@ -49,10 +57,10 @@ class LoginBasic extends StatelessWidget {
                          Expanded(flex: 3,
                           child: Container(
                             alignment: Alignment.bottomCenter,
-                            child: const Text('BIENVENIDO',
+                            child:  Text('BIENVENIDO',
                               style: TextStyle(
                                   color: Colors.white,
-                                fontSize: 30
+                                fontSize: (MediaQuery.of(context).size.height) / 26.5
                               ),),
                           ),
                         ),
@@ -137,7 +145,7 @@ class LoginBasic extends StatelessWidget {
                         margin: const EdgeInsets.only(top: 20),
                         width: (MediaQuery.of(context).size.width) / 1.5,
                         child: SigninButton(whiteBackground: true,
-                            child: contenidoBoton(false, 'Log In', true,),
+                            child: contenidoBoton(false, 'Log In', true,(MediaQuery.of(context).size.height) / 36.5),
                             onPressed: () {
                           Navigator.push(context,
                               MaterialPageRoute(builder: (context) =>  Home()));

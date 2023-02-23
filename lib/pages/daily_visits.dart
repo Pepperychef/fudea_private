@@ -32,9 +32,9 @@ class DailyVisits extends StatelessWidget {
                             )),
                           ),
                           Container(
-                            height: 90,
+                            height: (MediaQuery.of(context).size.height) / 8.5,
                             alignment: Alignment.topCenter,
-                            margin: const EdgeInsets.only(top: 60, right: 30),
+                            margin:  EdgeInsets.only(top: (MediaQuery.of(context).size.height) / 16.5, right: (MediaQuery.of(context).size.height) / 26.5),
                             child: Row(
                               mainAxisSize: MainAxisSize.min,
                             children: [
@@ -42,14 +42,14 @@ class DailyVisits extends StatelessWidget {
                               IconButton(onPressed: (){
                                 Navigator.pop(context);
                               },
-                                  iconSize: 35,
+                                  iconSize: (MediaQuery.of(context).size.height) / 26.5,
                                   color: Colors.white,
                                   icon: const Icon(CupertinoIcons.back)),
-                              const Text('VISITAS DIARIAS',
+                               Text('VISITAS DIARIAS',
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
                                     color: Colors.white,
-                                    fontSize: 25
+                                    fontSize: (MediaQuery.of(context).size.height) / 35.5
                                 ),),
 
                             ],
@@ -57,21 +57,21 @@ class DailyVisits extends StatelessWidget {
                           Align(
                             alignment: Alignment.bottomLeft,
                             child: Container(
-                              padding: const EdgeInsets.only(top: 20),
-                              child: const Text('9 DE ENERO',
+                              padding:  EdgeInsets.only(top: (MediaQuery.of(context).size.height) / 46.5),
+                              child:  Text('9 DE ENERO',
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
                                     color: Colors.white,
-                                    fontSize: 20
+                                    fontSize: (MediaQuery.of(context).size.height) / 46.5
                                 ),),
-                              margin: const EdgeInsets.only(left: 40),
-                              height: MediaQuery.of(context).size.height / 14,
-                              width: MediaQuery.of(context).size.width / 2,
-                              decoration: const BoxDecoration(
+                              margin:  EdgeInsets.only(left: (MediaQuery.of(context).size.height) / 26.5),
+                              height: MediaQuery.of(context).size.height / 15,
+                              width: MediaQuery.of(context).size.width / 2.2,
+                              decoration:  BoxDecoration(
                                   borderRadius: BorderRadius.only(
-                                      topRight: Radius.circular(20),
-                                      topLeft: Radius.circular(20)),
-                                  gradient: LinearGradient(
+                                      topRight: Radius.circular((MediaQuery.of(context).size.height) / 46.5),
+                                      topLeft: Radius.circular((MediaQuery.of(context).size.height) / 46.5)),
+                                  gradient: const LinearGradient(
                                     begin: Alignment.topCenter,
                                     end: Alignment.bottomCenter,
                                     colors: <Color>[
@@ -104,9 +104,9 @@ class DailyVisits extends StatelessWidget {
                                 borderRadius: BorderRadius.circular(20)
                             ),
                             child: Container(
-                              padding:const EdgeInsets.all(20),
+                              padding: EdgeInsets.all((MediaQuery.of(context).size.height) / 46.5),
                               decoration:  BoxDecoration(
-                                  borderRadius: BorderRadius.circular(20),
+                                  borderRadius: BorderRadius.circular((MediaQuery.of(context).size.height) / 46.5),
                                   gradient: const LinearGradient(
                                     begin: Alignment.centerLeft,
                                     end: Alignment.centerRight,
@@ -118,21 +118,21 @@ class DailyVisits extends StatelessWidget {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children:  [
-                                  Text('BENEFICIARIO $index',style: const TextStyle(
+                                  Text('BENEFICIARIO $index',style:  TextStyle(
                                       color: Colors.white70,
-                                      fontSize: 20
+                                      fontSize: (MediaQuery.of(context).size.height) / 46.5
                                   ),),
-                                  const Text('direccion beneficiario',style: TextStyle(
+                                   Text('direccion beneficiario',style: TextStyle(
                                       color: Colors.white70,
-                                      fontSize: 20
+                                      fontSize: (MediaQuery.of(context).size.height) / 46.5
                                   ),),
-                                  const Text('informacion',style: TextStyle(
+                                   Text('informacion',style: TextStyle(
                                       color: Colors.white70,
-                                      fontSize: 20
+                                      fontSize: (MediaQuery.of(context).size.height) / 46.5
                                   ),),
-                                  const Text('correo',style: TextStyle(
+                                   Text('correo',style: TextStyle(
                                       color: Colors.white70,
-                                      fontSize: 20
+                                      fontSize: (MediaQuery.of(context).size.height) / 46.5
                                   ),),
                                 ],
                               ),

@@ -1,7 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-Widget contenidoBoton(bool _cargando, String texto, bool offButton){
+Widget contenidoBoton(bool _cargando, String texto, bool offButton, double fontSize){
+
 
   if(_cargando){
     return const CircularProgressIndicator(
@@ -9,10 +10,12 @@ Widget contenidoBoton(bool _cargando, String texto, bool offButton){
     );
   }else{
     return Text("$texto",
+        textAlign: TextAlign.center,
         style: TextStyle(
             fontFamily: "RobotoMedium",
-            fontSize: 16.0,
-            color: offButton ? Colors.white:Colors.black));
+            fontSize: fontSize,
+
+            color: offButton ? Colors.white:Colors.blueGrey));
   }
 
 }

@@ -39,6 +39,7 @@ dependencies:
   odoo_rpc: ^0.5.1
   retry: ^3.1.0
   shared_preferences: ^2.0.17
+  intl: ^0.18.0
 
 dev_dependencies:
   flutter_test:

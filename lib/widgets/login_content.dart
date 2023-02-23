@@ -104,7 +104,7 @@ class LoginContent extends StatelessWidget {
       margin: EdgeInsets.only(top: 20),
       width: (MediaQuery.of(context).size.width) / 1.5,
       child: SigninButton(
-          child: contenidoBoton(_providerLogin.cargando, 'Conectar', false),
+          child: contenidoBoton(_providerLogin.cargando, 'Conectar', false, (MediaQuery.of(context).size.height) / 26.5),
           onPressed: () {
             if (!_providerLogin.cargando &&
                 _providerLogin.userName.isNotEmpty &&
@@ -142,7 +142,7 @@ class LoginContent extends StatelessWidget {
           whiteBackground: true,
           offButton: true,
           child: contenidoBoton(
-              _providerLogin.cargando, 'Conectar como Invitado', false),
+              _providerLogin.cargando, 'Conectar como Invitado', false, (MediaQuery.of(context).size.height) / 26.5),
           onPressed: () {
             if (!_providerLogin.cargando) {
               _providerLogin.pass = 'demo';
