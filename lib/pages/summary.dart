@@ -4,6 +4,11 @@ import 'package:flutter/widgets.dart';
 import 'package:fudea/pages/evaluation.dart';
 
 class Summary extends StatelessWidget {
+
+  int localId;
+
+  Summary({Key? key, required this.localId}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -92,10 +97,13 @@ class Summary extends StatelessWidget {
                               //square box; equal height and width so that it won't look like oval
                               child: GestureDetector(
                                 onTap: () {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => Evaluation()));
+                                  if(localId.isEven){
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => Evaluation()));
+                                  }
+
                                 },
                                 child: Card(
                                   shape: RoundedRectangleBorder(
@@ -103,14 +111,17 @@ class Summary extends StatelessWidget {
                                     //set border radius more than 50% of height and width to make circle
                                   ),
                                   child: Container(
-                                    decoration: const BoxDecoration(
+                                    decoration:  BoxDecoration(
                                         shape: BoxShape.circle,
                                         gradient: LinearGradient(
                                           begin: Alignment.centerLeft,
                                           end: Alignment.centerRight,
-                                          colors: <Color>[
-                                            Color.fromRGBO(0, 95, 146, 1),
-                                            Color.fromRGBO(28, 59, 112, 1),
+                                          colors:localId.isEven? <Color>[
+                                            const Color.fromRGBO(0, 95, 146, 1),
+                                            const Color.fromRGBO(28, 59, 112, 1),
+                                          ]: <Color>[
+                                            Colors.grey,
+                                            Colors.grey,
                                           ],
                                         )),
                                     child:  Icon(
@@ -164,7 +175,9 @@ class Summary extends StatelessWidget {
                                 width: (MediaQuery.of(context).size.height) / 6.5,
                                 //square box; equal height and width so that it won't look like oval
                                 child: GestureDetector(
-                                  onTap: () {},
+                                  onTap: () {
+                                    Navigator.pop(context);
+                                  },
                                   child: Card(
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(80),

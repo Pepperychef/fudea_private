@@ -1,13 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:fudea/pages/home.dart';
 import 'package:fudea/widgets/login_content.dart';
+import 'package:provider/provider.dart';
 
+import '../providers/provider_login.dart';
 import '../widgets/contenido_boton_Login.dart';
 import '../widgets/signin_button.dart';
 
 class LoginBasic extends StatelessWidget {
+
+  late ProviderLogin _providerLogin;
+
+
   @override
   Widget build(BuildContext context) {
+
+    _providerLogin = Provider.of<ProviderLogin>(context);
+
     return Scaffold(
       body: SingleChildScrollView(
         child: ConstrainedBox(
@@ -103,10 +112,10 @@ class LoginBasic extends StatelessWidget {
                                 Icons.mail,
                               )),
                           onSubmitted: (value) {
-
+                            _providerLogin.userName = value.trim();
                           },
                           onChanged: (value) {
-
+                            _providerLogin.userName = value.trim();
                           },
                         ),
                       ),
@@ -116,7 +125,7 @@ class LoginBasic extends StatelessWidget {
                         padding: const EdgeInsets.only(right: 15.0, left: 15.0),
                         child: TextField(
                           textAlign: TextAlign.center,
-                          obscureText: true,
+                          obscureText: _providerLogin.hidePass,
                           decoration: InputDecoration(
                             focusedBorder:const  UnderlineInputBorder(
                                 borderSide: BorderSide(color: Colors.transparent)),
@@ -126,18 +135,21 @@ class LoginBasic extends StatelessWidget {
                             hintText: "Password",
                             suffixIcon: GestureDetector(
                               onTap: () {
+                                _providerLogin.hidePass = !_providerLogin.hidePass;
                               },
-                              child: const Icon(
-                                true ? Icons.visibility : Icons.visibility_off,
-                                semanticLabel: true
+                              child:  Icon(
+                                _providerLogin.hidePass ? Icons.visibility : Icons.visibility_off,
+                                semanticLabel: _providerLogin.hidePass
                                     ? 'ver contraseña'
                                     : 'ocultar ontraseña',
                               ),
                             ),
                           ),
                           onSubmitted: (value) {
+                            _providerLogin.pass = value;
                           },
                           onChanged: (value) {
+                            _providerLogin.pass = value;
                           },
                         ),
                       ),
@@ -145,12 +157,36 @@ class LoginBasic extends StatelessWidget {
                         margin: const EdgeInsets.only(top: 20),
                         width: (MediaQuery.of(context).size.width) / 1.5,
                         child: SigninButton(whiteBackground: true,
-                            child: contenidoBoton(false, 'Log In', true,(MediaQuery.of(context).size.height) / 36.5),
-                            onPressed: () {
-                          Navigator.push(context,
-                              MaterialPageRoute(builder: (context) =>  Home()));
+                            child: contenidoBoton(_providerLogin.cargando, 'Log In', true,(MediaQuery.of(context).size.height) / 36.5),
+                            onPressed: () async {
+                              if (!_providerLogin.cargando &&
+                                  _providerLogin.userName.isNotEmpty &&
+                                  _providerLogin.pass.isNotEmpty) {
+                                _providerLogin.cargando = true;
+                                FocusScopeNode currentFocus = FocusScope.of(
+                                    context);
+                                if (!currentFocus.hasPrimaryFocus) {
+                                  currentFocus.unfocus();
+                                }
+                                if (_providerLogin.userName ==
+                                    'test@test.com' &&
+                                    _providerLogin.pass == '123') {
+                                  await Future.delayed(const Duration(seconds: 3))
+                                      .then((value) {
+                                        Navigator.push(context, MaterialPageRoute(
+                                            builder: (context) => Home()));
 
-                            }),
+                                  });
+                                } else {
+
+                                }
+                              } else {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                        content: Text(
+                                            'Verifique E-Mail, Contraseña y conexión a internet')));
+                              }
+                            })
                       )
 
                     ],

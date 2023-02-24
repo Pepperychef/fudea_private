@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fudea/pages/summary.dart';
+import 'package:intl/intl.dart';
 
 class DailyVisits extends StatelessWidget {
   @override
@@ -58,7 +59,7 @@ class DailyVisits extends StatelessWidget {
                             alignment: Alignment.bottomLeft,
                             child: Container(
                               padding:  EdgeInsets.only(top: (MediaQuery.of(context).size.height) / 46.5),
-                              child:  Text('9 DE ENERO',
+                              child:  Text(DateFormat.MMMEd('es_US').format(DateTime.now()),
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
                                     color: Colors.white,
@@ -95,7 +96,7 @@ class DailyVisits extends StatelessWidget {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => Summary()));
+                                    builder: (context) => Summary(localId: index,)));
                           },
                           child: Card(
                             margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),

@@ -20,7 +20,7 @@ class ProviderLogin with ChangeNotifier{
       {required this.url,
         required this.db,
         required this.demo}) {
-    setConexiones();
+    //setConexiones();
  //   checkConectadoOdoo();
   }
 
