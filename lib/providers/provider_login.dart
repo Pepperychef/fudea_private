@@ -12,6 +12,7 @@ class ProviderLogin with ChangeNotifier{
   bool _hidePass = true;
   String pass = "";
   bool _cargando = false;
+  bool? conectadoOdoo;
   bool demo;
 
   late Conexiones conexiones;
@@ -20,7 +21,7 @@ class ProviderLogin with ChangeNotifier{
       {required this.url,
         required this.db,
         required this.demo}) {
-    //setConexiones();
+    setConexiones();
  //   checkConectadoOdoo();
   }
 
@@ -42,7 +43,7 @@ class ProviderLogin with ChangeNotifier{
     }
     notifyListeners();
   }
-
+*/
 
   Future<void> conectarse(
       {required BuildContext context,
@@ -62,38 +63,18 @@ class ProviderLogin with ChangeNotifier{
       Toast.show(_msg);
     } else {
       conectadoOdoo = true;
-      loggedIntoLoginPage = true;
-      bool respToken = false;
-      int cont = 5;
-      while (!respToken && cont > 0) {
-        cont--;
-        respToken = await getToken(_resp.userId as int);
-        if (respToken) {
-          if (fromMenu){
-            await _deleteGeneralData();
-            demo = false;
-          }
-          await guardarUsuario(_resp.userId as int, _resp.partnerId as int,
-              _resp.userName as String);
-        } else {
-          _resp = await conexiones.authenticate(
-              fromDemo ? 'demo' : userName, fromDemo ? 'demo' : pass);
-        }
-      }
-      if (!respToken) {
-        conectadoOdoo = false;
-        loggedIntoLoginPage = false;
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            content:
-            Text("Se agoto el numero de intentos para obtener el token")));
-      }
+
+
+      _resp = await conexiones.authenticate(
+          fromDemo ? 'demo' : userName, fromDemo ? 'demo' : pass);
+
     }
     _cargando = false;
 
     notifyListeners();
   }
 
-*/
+
 
 
   bool get hidePass => _hidePass;

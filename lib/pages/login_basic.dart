@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fudea/pages/home.dart';
 import 'package:fudea/widgets/login_content.dart';
 import 'package:provider/provider.dart';
+import 'package:toast/toast.dart';
 
 import '../providers/provider_login.dart';
 import '../widgets/contenido_boton_Login.dart';
@@ -16,6 +17,7 @@ class LoginBasic extends StatelessWidget {
   Widget build(BuildContext context) {
 
     _providerLogin = Provider.of<ProviderLogin>(context);
+
 
     return Scaffold(
       body: SingleChildScrollView(
@@ -168,6 +170,9 @@ class LoginBasic extends StatelessWidget {
                                 if (!currentFocus.hasPrimaryFocus) {
                                   currentFocus.unfocus();
                                 }
+
+                                //_providerLogin.conectarse(context: context, fromDemo: false, fromMenu: false);
+
                                 if (_providerLogin.userName ==
                                     'test@test.com' &&
                                     _providerLogin.pass == '123') {

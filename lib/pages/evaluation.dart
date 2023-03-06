@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fudea/widgets/quiz_types.dart';
 
 class Evaluation extends StatelessWidget{
   @override
@@ -89,7 +90,20 @@ class Evaluation extends StatelessWidget{
                         color: Colors.white,
                         child: ListView(
                           shrinkWrap: true,
-                          children: [],
+                          children: [
+
+                            QuizTypes(tipo: 'simple_choice', validationMinDate: '', validationMaxDate: '', permiteComentario: false, idOdoo: 1, tituloComentario: 'SELECCION UNICA', validationRequired: false,),
+
+                            QuizTypes(tipo: 'multiple_choice', validationMinDate: '', validationMaxDate: '', permiteComentario: false, idOdoo: 1, tituloComentario: 'SELECCION MULTIPLE', validationRequired: false,),
+
+                            QuizTypes(tipo: 'text_box', validationMinDate: '', validationMaxDate: '', permiteComentario: false, idOdoo: 1, tituloComentario: 'SELECCION MULTIPLE', validationRequired: false,),
+
+                            QuizTypes(tipo: 'bool_choice', validationMinDate: '', validationMaxDate: '', permiteComentario: false, idOdoo: 1, tituloComentario: 'DECISION', validationRequired: false,),
+                            QuizTypes(tipo: 'score', validationMinDate: '', validationMaxDate: '', permiteComentario: false, idOdoo: 1, tituloComentario: 'NOTA', validationRequired: false,),
+
+
+
+                          ],
                         ),
                       ))
 

@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fudea/pages/daily_visits.dart';
 import 'package:fudea/widgets/home_buttons.dart';
+import 'package:http/http.dart' as http;
 
 import '../widgets/contenido_boton_Login.dart';
 
@@ -78,7 +79,18 @@ class Home extends StatelessWidget {
                           false,
                             (MediaQuery.of(context).size.height) / 36.5
                         ),
-                        onPressed: () {
+                        onPressed: () async {
+                          String url = 'http://vps-2872295-x.dattaweb.com:8069/operaciones/app/visitas/1';
+
+                          var response = await http.get(
+                            Uri.parse(url),
+                            headers: {"Accept": 'application/json'},
+                          );
+
+                          print('w');
+
+
+
                           Navigator.push(
                               context,
                               MaterialPageRoute(
