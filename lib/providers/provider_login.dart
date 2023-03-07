@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:toast/toast.dart';
 
+import '../pages/home.dart';
 import '../utilities/conexiones.dart';
 import '../utilities/shared_preferences_manager.dart';
 
@@ -67,6 +69,17 @@ class ProviderLogin with ChangeNotifier{
 
       _resp = await conexiones.authenticate(
           fromDemo ? 'demo' : userName, fromDemo ? 'demo' : pass);
+
+      print('${_resp.toJson()['userId']}');
+      print('${_resp.toJson()['userName']}');
+      print('UwU');
+
+      Navigator.push(context, MaterialPageRoute(
+          builder: (context) => Home(
+            user: userName,
+            userID: _resp.toJson()['userId'],
+            userName:_resp.toJson()['userName'] ,
+          )));
 
     }
     _cargando = false;

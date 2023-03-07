@@ -3,6 +3,7 @@ import 'package:fudea/pages/login_basic.dart';
 import 'package:fudea/providers/provider_login.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:provider/provider.dart';
+import 'package:toast/toast.dart';
 
 void main() {
   runApp(const MyApp());
@@ -15,6 +16,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     initializeDateFormatting();
+
     return MaterialApp(
       theme: ThemeData(
         primarySwatch: Colors.blue,
@@ -22,7 +24,7 @@ class MyApp extends StatelessWidget {
       home: MultiProvider(
         child: LoginBasic(),
         providers: [
-        ChangeNotifierProvider.value(value: ProviderLogin(context, url: 'http://vps-2872295-x.dattaweb.com:8069', db: 'odoo', demo: true
+        ChangeNotifierProvider.value(value: ProviderLogin(context, url: 'http://vps-2872295-x.dattaweb.com:8069', db: 'TEST_1', demo: true
         )),
       ],
 

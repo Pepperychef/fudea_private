@@ -1,9 +1,15 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fudea/data/entities/visit.dart';
 import 'package:fudea/pages/summary.dart';
 import 'package:intl/intl.dart';
 
 class DailyVisits extends StatelessWidget {
+
+  List<Visit> visits;
+
+  DailyVisits({required this.visits});
+
   @override
   Widget build(BuildContext context) {
 
@@ -89,7 +95,7 @@ class DailyVisits extends StatelessWidget {
                       color: Colors.white,
                     child: ListView(
                       shrinkWrap: true,
-                      children: List.generate(10, (index){
+                      children: List.generate(visits.length, (index){
 
                         return GestureDetector(
                           onTap: (){
@@ -119,19 +125,19 @@ class DailyVisits extends StatelessWidget {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children:  [
-                                  Text('BENEFICIARIO $index',style:  TextStyle(
+                                  Text(visits[index].nombreBeneficiario,style:  TextStyle(
                                       color: Colors.white70,
                                       fontSize: (MediaQuery.of(context).size.height) / 46.5
                                   ),),
-                                   Text('direccion beneficiario',style: TextStyle(
+                                   Text(visits[index].dirContacto,style: TextStyle(
                                       color: Colors.white70,
                                       fontSize: (MediaQuery.of(context).size.height) / 46.5
                                   ),),
-                                   Text('informacion',style: TextStyle(
+                                   Text(visits[index].telefonoContacto,style: TextStyle(
                                       color: Colors.white70,
                                       fontSize: (MediaQuery.of(context).size.height) / 46.5
                                   ),),
-                                   Text('correo',style: TextStyle(
+                                   Text(visits[index].emailContacto,style: TextStyle(
                                       color: Colors.white70,
                                       fontSize: (MediaQuery.of(context).size.height) / 46.5
                                   ),),
