@@ -1,10 +1,19 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fudea/widgets/quiz_types.dart';
+import 'package:provider/provider.dart';
 
-class Evaluation extends StatelessWidget{
+import '../data/entities/evaluation.dart';
+import '../providers/provider_evaluacion.dart';
+
+class EvaluationPage extends StatelessWidget{
+
+  late ProviderEvaluacion _provider;
+
   @override
   Widget build(BuildContext context) {
+
+    _provider = Provider.of<ProviderEvaluacion>(context);
 
     return Scaffold(
       body: SingleChildScrollView(
@@ -89,21 +98,27 @@ class Evaluation extends StatelessWidget{
                       child: Container(
                         color: Colors.white,
                         child: ListView(
+
                           shrinkWrap: true,
-                          children: [
+                          children: List.generate(_provider.listEvaluation.length, (index){
 
-                            QuizTypes(tipo: 'simple_choice', validationMinDate: '', validationMaxDate: '', permiteComentario: false, idOdoo: 1, tituloComentario: 'SELECCION UNICA', validationRequired: false,),
+                            return MultiProvider(
+                                child: QuizTypes(
+                                    tipo: _provider.listEvaluation[index].tipo,
+                                    permiteComentario: false,
+                                    tituloComentario: _provider.listEvaluation[index].textoPregunta,
+                                    index: index,
+                                    validationRequired: false,
+                                    validationMaxDate: '',
+                                    validationMinDate: ''
+                                ),
+                                providers:[
+                                  ChangeNotifierProvider.value(value: _provider)
 
-                            QuizTypes(tipo: 'multiple_choice', validationMinDate: '', validationMaxDate: '', permiteComentario: false, idOdoo: 1, tituloComentario: 'SELECCION MULTIPLE', validationRequired: false,),
-
-                            QuizTypes(tipo: 'text_box', validationMinDate: '', validationMaxDate: '', permiteComentario: false, idOdoo: 1, tituloComentario: 'SELECCION MULTIPLE', validationRequired: false,),
-
-                            QuizTypes(tipo: 'bool_choice', validationMinDate: '', validationMaxDate: '', permiteComentario: false, idOdoo: 1, tituloComentario: 'DECISION', validationRequired: false,),
-                            QuizTypes(tipo: 'score', validationMinDate: '', validationMaxDate: '', permiteComentario: false, idOdoo: 1, tituloComentario: 'NOTA', validationRequired: false,),
+                                ]);
 
 
-
-                          ],
+                          }),
                         ),
                       ))
 

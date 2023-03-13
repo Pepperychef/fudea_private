@@ -1,16 +1,24 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:fudea/pages/evaluation.dart';
+import 'package:fudea/pages/evaluation_page.dart';
+import 'package:provider/provider.dart';
+
+import '../providers/provider_evaluacion.dart';
 
 class Summary extends StatelessWidget {
 
   int localId;
 
+  late ProviderEvaluacion _providerEvaluacion;
+
   Summary({Key? key, required this.localId}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+
+    _providerEvaluacion = Provider.of<ProviderEvaluacion>(context);
+
     return Scaffold(
       body: SingleChildScrollView(
         child: ConstrainedBox(
@@ -96,12 +104,15 @@ class Summary extends StatelessWidget {
                               width: (MediaQuery.of(context).size.height) / 6.5,
                               //square box; equal height and width so that it won't look like oval
                               child: GestureDetector(
+
                                 onTap: () {
                                   if(localId.isEven){
                                     Navigator.push(
                                         context,
                                         MaterialPageRoute(
-                                            builder: (context) => Evaluation()));
+                                            builder: (context) => MultiProvider(
+                                              child: EvaluationPage(),
+                                                providers: [ChangeNotifierProvider.value(value: _providerEvaluacion)])));
                                   }
 
                                 },

@@ -75,7 +75,7 @@ class RespuestaTexto extends StatelessWidget {
               controller: _controller,
               onTap: onTapInput,
               enabled: enabled,
-              //onChanged: onSubmitted,
+              onChanged: onSubmitted,
               onSubmitted: onSubmitted,
               textInputAction: TextInputAction.done,
               decoration: InputDecoration(

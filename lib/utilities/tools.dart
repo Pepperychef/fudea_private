@@ -102,6 +102,23 @@ String doubleToCurrency(double value, String currency) {
   return result;
 }
 
+Future<List<Map<int,Option>>> fillOptions (List<Evaluation> preguntas, OptionDao optionDao) async{
+
+  List<Map<int,Option>> options= [];
+
+  for (Evaluation pregunta in preguntas) {
+    List<Option> _tmp = await optionDao.findOptionsByEvaluationId(pregunta.idPregunta);
+    Map<int,Option> _tmp2= {for (var item in _tmp) item.idOption : item};
+
+    options.add(_tmp2);
+  }
+
+
+  return options;
+
+
+}
+
 Future<List<Visit>> saveData({required Map<String, dynamic> list}) async {
   List list1 = list['VISITAS'];
 

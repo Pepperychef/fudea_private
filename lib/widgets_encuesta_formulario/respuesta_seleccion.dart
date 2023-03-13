@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:fudea/data/entities/option.dart';
+import 'package:fudea/data/entities/response.dart';
 
 class RespuestaSeleccion extends StatelessWidget {
   bool? completada = false;
-  List? opcionesActivas = [];
+  List<Response> opcionesActivas;
   bool? permiteComentario = false;
 
   String? tituloComentario = '';
@@ -11,7 +13,7 @@ class RespuestaSeleccion extends StatelessWidget {
 
   RespuestaSeleccion(
       {this.completada,
-      this.opcionesActivas,
+      required this.opcionesActivas,
       this.permiteComentario,
       this.tituloComentario,
       this.opciones});
