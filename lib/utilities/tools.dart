@@ -141,6 +141,16 @@ Future<void> saveAttachemnts({required Attachment data, required bool finalSave,
 
 }
 
+Future<List<Visit>> fetchSavedVisits() async{
+  VisitDao visitDao = await FutureDaos().visitDaoFuture();
+
+  List<Visit> visitasGuardadas = await visitDao.findSaved();
+
+  return visitasGuardadas;
+
+
+}
+
 
 
 Future<List<Visit>> saveData({required Map<String, dynamic> list}) async {
@@ -212,9 +222,9 @@ Future<void> sendFilesToServer ({required List<Visit> visitas, required int idUs
     List respuestas= [];
     for(Response response in _tmp){
       Map respData = {
-        "id_pregunta": response.idEvaluation,
-        "id_respuesta": response.idOption,
-        "texto_respuesta": response.strOption,
+        "id_pregunta": response.idEvaluation.toString(),
+        "id_respuesta": response.idOption.toString(),
+        "texto_respuesta": response.strOption.toString(),
       };
       respuestas.add(respData);
     }
@@ -238,15 +248,15 @@ Future<void> sendFilesToServer ({required List<Visit> visitas, required int idUs
     }
 
     Map visitData = {
-      "id_visita": visit.idProyecto,
+      "id_visita": visit.idProyecto.toString(),
       "img_acta": imgActa,
       "img_evidencia": imgEvidencia,
       "arch_audio": arch_audio,
       "posicion":{
-        "latitud": 0,
-        "Longitud": 0,
+        "latitud": '0',
+        "Longitud": '0',
       } ,
-      "evaluacuion": respuestas,
+      "evaluacuion": respuestas.toString(),
 
     };
     visitas.add(visitData);
@@ -254,13 +264,13 @@ Future<void> sendFilesToServer ({required List<Visit> visitas, required int idUs
   }
 
   Map data = {
-    'idUsuario': idUsuario,
-    'visitas': visitas
+    'idUsuario': idUsuario.toString(),
+    'visitas': visitas.toString()
   };
 
   Constantes constantes = Constantes();
 
-  var response = await http.post(Uri.parse('${constantes.url}/upload'), body: data);
+  var response = await http.post(Uri.parse('${constantes.url}upload'), body: data);
 
   if(response.statusCode != 400){
     AppDatabase _db = await constantes.databaseFuture();

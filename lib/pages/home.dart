@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fudea/pages/daily_visits.dart';
+import 'package:fudea/pages/saved_visits.dart';
 import 'package:fudea/utilities/constantes.dart';
 import 'package:fudea/utilities/tools.dart';
 import 'package:fudea/widgets/home_buttons.dart';
@@ -127,7 +128,13 @@ class Home extends StatelessWidget {
                         child: contenidoBoton(false, 'Enviar Progreso del Dia',
                             true, (MediaQuery.of(context).size.height) / 36.5),
                         onPressed: () {
-                          //Navigator.push(context, route)
+                          fetchSavedVisits().then((value){
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => SavedVisits(visits: value, idUsuario: userID,)));
+                          });
+
                         }),
                   ),
                 ],

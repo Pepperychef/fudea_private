@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:permissions_plugin/permissions_plugin.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:toast/toast.dart';
 
 import '../pages/home.dart';
@@ -31,40 +31,22 @@ class ProviderLogin with ChangeNotifier{
   void setConexiones() {
     conexiones = Conexiones(url: url, db: db);
   }
-/*
-  void checkConectadoOdoo() async {
-    int? idUsuario = await SharedPreferencesManager.getUsuarioActivo();
-    resUsersDao = await FutureDaos().resUsersDaoFuture();
-    if (idUsuario != 0 && idUsuario != null) {
-      user = await resUsersDao!.encuentraUsuarioPorId(idUsuario);
-      if (user!.partnerIdOdoo != 0) {
-        if (user!.login != 'demo') conectadoOdoo = true;
-      }
-    }
-    if (conectadoOdoo == null) {
-      conectadoOdoo = false;
-    }
-    notifyListeners();
-  }
-*/
-
 
   Future<void> conectarse(
       {required BuildContext context,
         required bool fromDemo,
         required bool fromMenu,}) async {
-    //await getUltimaConexion();
 
+    Map<Permission, PermissionStatus> permission = await [
+      Permission.location,
+      Permission.storage,
+      Permission.camera,
+      Permission.locationWhenInUse,
+      Permission.microphone,
+      Permission.manageExternalStorage
+    ].request();
 
-    Map<Permission, PermissionState> permission =
-    await PermissionsPlugin.checkPermissions([
-      Permission.RECORD_AUDIO,
-      Permission.ACCESS_FINE_LOCATION,
-      Permission.CAMERA,
-      Permission.WRITE_EXTERNAL_STORAGE
-    ]);
-
-    if(permission.containsValue(PermissionState.GRANTED)){
+    if(permission.containsValue(PermissionStatus.granted)){
       ConAuthRes _resp = await conexiones.authenticate(
           fromDemo ? 'demo' : userName, fromDemo ? 'demo' : pass);
       if (_resp.error) {
@@ -97,18 +79,7 @@ class ProviderLogin with ChangeNotifier{
       }
       _cargando = false;
 
-    }else{
-      await PermissionsPlugin.requestPermissions([
-        Permission.RECORD_AUDIO,
-        Permission.ACCESS_FINE_LOCATION,
-        Permission.CAMERA,
-        Permission.WRITE_EXTERNAL_STORAGE
-      ]);
     }
-
-
-
-
 
     notifyListeners();
   }

@@ -3,10 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:fudea/data/entities/visit.dart';
 import 'package:fudea/pages/evaluation_page.dart';
+import 'package:fudea/providers/provider_grabador_encuesta.dart';
 import 'package:fudea/providers/provider_summary.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/provider_evaluacion.dart';
+import '../utilities/peppery_audio_recorder.dart';
 
 class Summary extends StatelessWidget {
 
@@ -114,15 +116,21 @@ class Summary extends StatelessWidget {
                               child: GestureDetector(
 
                                 onTap: () {
-                                  if(localId.isEven){
+                                  if(visit.incluyeEvaluacion){
                                     Navigator.push(
                                         context,
                                         MaterialPageRoute(
                                             builder: (context) => MultiProvider(
-                                              child: EvaluationPage(),
-                                                providers: [ChangeNotifierProvider.value(value: _providerEvaluacion)])));
+                                                child: EvaluationPage(),
+                                                providers: [
+                                                  ChangeNotifierProvider.value(value: _providerEvaluacion),
+                                                  ChangeNotifierProvider.value(value: ProviderGrabadorEncuesta(idEvaluation: localId, visit: visit, recording: Recording(
+                                                      duration: Duration(),
+                                                      audioOutputFormat: AudioOutputFormat.WAV,
+                                                      path: '',
+                                                      extension: '')))
+                                                ])));
                                   }
-
                                 },
                                 child: Card(
                                   shape: RoundedRectangleBorder(
@@ -135,7 +143,7 @@ class Summary extends StatelessWidget {
                                         gradient: LinearGradient(
                                           begin: Alignment.centerLeft,
                                           end: Alignment.centerRight,
-                                          colors:localId.isEven? <Color>[
+                                          colors:visit.incluyeEvaluacion? <Color>[
                                             const Color.fromRGBO(0, 95, 146, 1),
                                             const Color.fromRGBO(28, 59, 112, 1),
                                           ]: <Color>[
@@ -196,7 +204,8 @@ class Summary extends StatelessWidget {
                                 width: (MediaQuery.of(context).size.height) / 6.5,
                                 //square box; equal height and width so that it won't look like oval
                                 child: GestureDetector(
-                                  onTap: () {
+                                  onTap: () async{
+                                    await _providerSummary.saveResponses(_providerEvaluacion.listResponses, visit);
                                     Navigator.pop(context);
                                   },
                                   child: Card(

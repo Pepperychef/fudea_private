@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fudea/utilities/tools.dart';
 import 'package:intl/intl.dart';
 
 import '../data/entities/visit.dart';
@@ -7,12 +8,20 @@ import '../data/entities/visit.dart';
 class SavedVisits extends StatelessWidget{
 
   List<Visit> visits;
-  SavedVisits({required this.visits});
+  int idUsuario;
+  SavedVisits({required this.visits, required this.idUsuario});
 
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          sendFilesToServer(visitas: visits, idUsuario: idUsuario);
+        },
+        backgroundColor: Color.fromRGBO(0, 95, 146, 1),
+        child: const Icon(CupertinoIcons.cloud_upload),
+      ),
       body: SingleChildScrollView(
         child: ConstrainedBox(
           constraints: BoxConstraints(
@@ -58,7 +67,7 @@ class SavedVisits extends StatelessWidget{
                                     color: Colors.white,
                                     icon: const Icon(CupertinoIcons.back)),
                                 Text(
-                                  'VISITAS DIARIAS',
+                                  'RESUMEN VISITAS',
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
                                       color: Colors.white,

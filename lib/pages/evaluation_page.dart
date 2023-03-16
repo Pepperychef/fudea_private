@@ -17,6 +17,7 @@ class EvaluationPage extends StatelessWidget{
   Widget build(BuildContext context) {
 
     _provider = Provider.of<ProviderEvaluacion>(context);
+    _providerGrabador = Provider.of<ProviderGrabadorEncuesta>(context);
 
     return Scaffold(
       body: SingleChildScrollView(

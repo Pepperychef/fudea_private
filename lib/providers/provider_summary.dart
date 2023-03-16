@@ -1,12 +1,47 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fudea/data/daos/response_dao.dart';
+import 'package:fudea/data/daos/visit_dao.dart';
 import 'package:fudea/data/entities/attachment.dart';
+import 'package:fudea/data/entities/visit.dart';
+import 'package:fudea/utilities/future_daos.dart';
 import 'package:fudea/utilities/tools.dart';
 import 'package:image_picker/image_picker.dart';
+
+import '../data/entities/response.dart';
 
 class ProviderSummary with ChangeNotifier{
 
 
+  Future<void> saveResponses(List<List<Response>> respuestas, Visit visit) async{
+
+    FutureDaos futureDaos = FutureDaos();
+    ResponseDao _dao = await futureDaos.responseDaoFuture();
+    VisitDao _vdao = await futureDaos.visitDaoFuture();
+
+    for (List<Response> _list in respuestas){
+      await _dao.insertMultiple(_list);
+    }
+
+    Visit _tmp = Visit(
+      id: visit.id,
+        dirContacto: visit.dirContacto,
+        emailContacto: visit.emailContacto,
+        idProyecto: visit.idProyecto,
+        idSalidaTerreno: visit.idSalidaTerreno,
+        incluyeEvaluacion: visit.incluyeEvaluacion,
+        nombreBeneficiario: visit.nombreBeneficiario,
+        nombreInstrumento: visit.nombreInstrumento,
+        nombreProyecto: visit.nombreProyecto,
+        telefonoContacto: visit.telefonoContacto,
+        guardado: true);
+
+    _vdao.updateSingle(_tmp);
+
+
+
+
+  }
 
   void getImage(BuildContext context,  int idVisita, String tipoFoto
   ) async {

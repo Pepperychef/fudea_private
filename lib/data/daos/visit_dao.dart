@@ -7,6 +7,9 @@ abstract class VisitDao{
   @Query('SELECT * FROM Visit')
   Future<List<Visit>> findEverything();
 
+  @Query('SELECT * FROM Visit WHERE guardado = 1')
+  Future<List<Visit>> findSaved();
+
   @insert
   Future<void> insertSingle(Visit elemento);
 

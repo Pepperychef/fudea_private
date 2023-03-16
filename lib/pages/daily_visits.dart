@@ -129,44 +129,49 @@ class DailyVisits extends StatelessWidget {
                           children: List.generate(visits.length, (index) {
                             return GestureDetector(
                               onTap: () async {
-                                OptionDao optionDao =
-                                    await FutureDaos().optionDaoFuture();
-                                EvaluationDao evaluationDao =
-                                    await FutureDaos().evaluationDaoFuture();
+                                if(!visits[index].guardado){
 
-                                List<Evaluation> listEvaluation =
-                                    await evaluationDao
-                                        .findEvaluationsByVisitId(
-                                            visits[index].idProyecto);
+                                  OptionDao optionDao =
+                                  await FutureDaos().optionDaoFuture();
+                                  EvaluationDao evaluationDao =
+                                  await FutureDaos().evaluationDaoFuture();
 
-                                List<Map<int, Option>> listOptions =
-                                    await fillOptions(
-                                        listEvaluation, optionDao);
+                                  List<Evaluation> listEvaluation =
+                                  await evaluationDao
+                                      .findEvaluationsByVisitId(
+                                      visits[index].idProyecto);
 
-                                List<List<Response>> listResponses =
-                                    List.generate(
-                                        listEvaluation.length, (index) => []);
+                                  List<Map<int, Option>> listOptions =
+                                  await fillOptions(
+                                      listEvaluation, optionDao);
 
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => MultiProvider(
-                                                child: Summary(
-                                                  localId: index,
-                                                  visit: visits[index],
-                                                ),
-                                                providers: [
-                                                  ChangeNotifierProvider.value(
-                                                      value: ProviderSummary()),
-                                                  ChangeNotifierProvider.value(
-                                                      value: ProviderEvaluacion(
-                                                          listEvaluation:
-                                                              listEvaluation,
-                                                          listOptions:
-                                                              listOptions,
-                                                          listResponses:
-                                                              listResponses))
-                                                ])));
+                                  List<List<Response>> listResponses =
+                                  List.generate(
+                                      listEvaluation.length, (index) => []);
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => MultiProvider(
+                                              child: Summary(
+                                                localId: visits[index].idProyecto,
+                                                visit: visits[index],
+                                              ),
+                                              providers: [
+                                                ChangeNotifierProvider.value(
+                                                    value: ProviderSummary()),
+                                                ChangeNotifierProvider.value(
+                                                    value: ProviderEvaluacion(
+                                                        listEvaluation:
+                                                        listEvaluation,
+                                                        listOptions:
+                                                        listOptions,
+                                                        listResponses:
+                                                        listResponses))
+                                              ])));
+
+                                }
+
+
                               },
                               child: Card(
                                 margin: const EdgeInsets.symmetric(

@@ -515,6 +515,23 @@ class _$VisitDao extends VisitDao {
   }
 
   @override
+  Future<List<Visit>> findSaved() async {
+    return _queryAdapter.queryList('SELECT * FROM Visit WHERE guardado = 1',
+        mapper: (Map<String, Object?> row) => Visit(
+            id: row['id'] as int?,
+            dirContacto: row['dirContacto'] as String,
+            emailContacto: row['emailContacto'] as String,
+            idProyecto: row['idProyecto'] as int,
+            idSalidaTerreno: row['idSalidaTerreno'] as int,
+            incluyeEvaluacion: (row['incluyeEvaluacion'] as int) != 0,
+            nombreBeneficiario: row['nombreBeneficiario'] as String,
+            nombreInstrumento: row['nombreInstrumento'] as String,
+            nombreProyecto: row['nombreProyecto'] as String,
+            telefonoContacto: row['telefonoContacto'] as String,
+            guardado: (row['guardado'] as int) != 0));
+  }
+
+  @override
   Future<void> insertSingle(Visit elemento) async {
     await _visitInsertionAdapter.insert(elemento, OnConflictStrategy.abort);
   }

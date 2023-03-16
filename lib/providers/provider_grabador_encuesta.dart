@@ -12,7 +12,7 @@ import 'package:fudea/data/entities/visit.dart';
 import 'package:fudea/utilities/future_daos.dart';
 import 'package:fudea/utilities/tools.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:permissions_plugin/permissions_plugin.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:audioplayers/audioplayers.dart';
 import '../utilities/peppery_audio_recorder.dart';
 import '../widgets_encuesta_formulario/grabador.dart' as grabador;
@@ -33,7 +33,7 @@ class ProviderGrabadorEncuesta with ChangeNotifier{
   String? savedPath;
   grabador.PlayerState playerState = grabador.PlayerState.stopped;
 
-  late String valueRespuesta;
+  String valueRespuesta = '';
 
   ProviderGrabadorEncuesta({required this.recording, required this.visit, required this.idEvaluation}){
     getValueRespuesta();
@@ -103,14 +103,15 @@ class ProviderGrabadorEncuesta with ChangeNotifier{
 
   startRecording(BuildContext context) async {
     try {
-      Map<Permission, PermissionState> permission =
-      await PermissionsPlugin.checkPermissions([
-        Permission.RECORD_AUDIO,
-      ]);
+
+      Map<Permission, PermissionStatus> permission = await [
+        Permission.microphone,
+        Permission.manageExternalStorage
+      ].request();
 
       //print('permisos ${permission.values}');
 
-      if (permission.containsValue(PermissionState.GRANTED)) {
+      if (permission.containsValue(PermissionStatus.granted)) {
         final directory = await getApplicationDocumentsDirectory();
 
         String _extraId = getIdByDateTime();
@@ -153,8 +154,7 @@ class ProviderGrabadorEncuesta with ChangeNotifier{
       } else {
         Scaffold.of(context).showSnackBar(
             new SnackBar(content: new Text("Debes aceptar los permisos")));
-        await PermissionsPlugin.requestPermissions(
-            [Permission.RECORD_AUDIO, Permission.WRITE_EXTERNAL_STORAGE]);
+        //await PermissionsPlugin.requestPermissions([Permission.RECORD_AUDIO, Permission.WRITE_EXTERNAL_STORAGE]);
       }
     } catch (e) {
       print(e);
