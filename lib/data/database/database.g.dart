@@ -69,6 +69,8 @@ class _$AppDatabase extends AppDatabase {
 
   VisitDao? _visitDaoInstance;
 
+  AttachmentDao? _attachmentDaoInstance;
+
   Future<sqflite.Database> open(String path, List<Migration> migrations,
       [Callback? callback]) async {
     final databaseOptions = sqflite.OpenDatabaseOptions(
@@ -88,13 +90,15 @@ class _$AppDatabase extends AppDatabase {
       },
       onCreate: (database, version) async {
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `Evaluation` (`id` INTEGER, `idVisita` INTEGER NOT NULL, `idPregunta` INTEGER NOT NULL, `secuencia` INTEGER NOT NULL, `textoPregunta` TEXT NOT NULL, `tipo` TEXT NOT NULL, PRIMARY KEY (`id`))');
+            'CREATE TABLE IF NOT EXISTS `Evaluation` (`id` INTEGER, `idVisita` INTEGER NOT NULL, `idPregunta` INTEGER NOT NULL, `idProyecto` INTEGER NOT NULL, `secuencia` INTEGER NOT NULL, `textoPregunta` TEXT NOT NULL, `tipo` TEXT NOT NULL, PRIMARY KEY (`id`))');
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `Option` (`id` INTEGER, `idEvaluation` INTEGER NOT NULL, `idOption` INTEGER NOT NULL, `strOption` TEXT NOT NULL, PRIMARY KEY (`id`))');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `Response` (`id` INTEGER, `idEvaluation` INTEGER NOT NULL, `idOption` INTEGER NOT NULL, `strOption` TEXT NOT NULL, PRIMARY KEY (`id`))');
+            'CREATE TABLE IF NOT EXISTS `Response` (`id` INTEGER, `idEvaluation` INTEGER NOT NULL, `idProyecto` INTEGER NOT NULL, `idOption` INTEGER NOT NULL, `strOption` TEXT NOT NULL, PRIMARY KEY (`id`))');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `Visit` (`id` INTEGER, `idProyecto` INTEGER NOT NULL, `idSalidaTerreno` INTEGER NOT NULL, `dirContacto` TEXT NOT NULL, `emailContacto` TEXT NOT NULL, `incluyeEvaluacion` INTEGER NOT NULL, `nombreBeneficiario` TEXT NOT NULL, `nombreProyecto` TEXT NOT NULL, `nombreInstrumento` TEXT NOT NULL, `telefonoContacto` TEXT NOT NULL, PRIMARY KEY (`id`))');
+            'CREATE TABLE IF NOT EXISTS `Visit` (`id` INTEGER, `idProyecto` INTEGER NOT NULL, `idSalidaTerreno` INTEGER NOT NULL, `dirContacto` TEXT NOT NULL, `emailContacto` TEXT NOT NULL, `incluyeEvaluacion` INTEGER NOT NULL, `nombreBeneficiario` TEXT NOT NULL, `nombreProyecto` TEXT NOT NULL, `nombreInstrumento` TEXT NOT NULL, `telefonoContacto` TEXT NOT NULL, `guardado` INTEGER NOT NULL, PRIMARY KEY (`id`))');
+        await database.execute(
+            'CREATE TABLE IF NOT EXISTS `Attachment` (`id` INTEGER, `idVisita` INTEGER NOT NULL, `idEvaluation` INTEGER NOT NULL, `type` TEXT NOT NULL, `binaryFile` TEXT NOT NULL, PRIMARY KEY (`id`))');
 
         await callback?.onCreate?.call(database, version);
       },
@@ -121,6 +125,11 @@ class _$AppDatabase extends AppDatabase {
   VisitDao get visitDao {
     return _visitDaoInstance ??= _$VisitDao(database, changeListener);
   }
+
+  @override
+  AttachmentDao get attachmentDao {
+    return _attachmentDaoInstance ??= _$AttachmentDao(database, changeListener);
+  }
 }
 
 class _$EvaluationDao extends EvaluationDao {
@@ -133,6 +142,7 @@ class _$EvaluationDao extends EvaluationDao {
                   'id': item.id,
                   'idVisita': item.idVisita,
                   'idPregunta': item.idPregunta,
+                  'idProyecto': item.idProyecto,
                   'secuencia': item.secuencia,
                   'textoPregunta': item.textoPregunta,
                   'tipo': item.tipo
@@ -145,6 +155,7 @@ class _$EvaluationDao extends EvaluationDao {
                   'id': item.id,
                   'idVisita': item.idVisita,
                   'idPregunta': item.idPregunta,
+                  'idProyecto': item.idProyecto,
                   'secuencia': item.secuencia,
                   'textoPregunta': item.textoPregunta,
                   'tipo': item.tipo
@@ -157,6 +168,7 @@ class _$EvaluationDao extends EvaluationDao {
                   'id': item.id,
                   'idVisita': item.idVisita,
                   'idPregunta': item.idPregunta,
+                  'idProyecto': item.idProyecto,
                   'secuencia': item.secuencia,
                   'textoPregunta': item.textoPregunta,
                   'tipo': item.tipo
@@ -182,6 +194,7 @@ class _$EvaluationDao extends EvaluationDao {
             id: row['id'] as int?,
             idVisita: row['idVisita'] as int,
             idPregunta: row['idPregunta'] as int,
+            idProyecto: row['idProyecto'] as int,
             secuencia: row['secuencia'] as int,
             textoPregunta: row['textoPregunta'] as String,
             tipo: row['tipo'] as String),
@@ -195,6 +208,7 @@ class _$EvaluationDao extends EvaluationDao {
             id: row['id'] as int?,
             idVisita: row['idVisita'] as int,
             idPregunta: row['idPregunta'] as int,
+            idProyecto: row['idProyecto'] as int,
             secuencia: row['secuencia'] as int,
             textoPregunta: row['textoPregunta'] as String,
             tipo: row['tipo'] as String));
@@ -325,12 +339,14 @@ class _$OptionDao extends OptionDao {
 
 class _$ResponseDao extends ResponseDao {
   _$ResponseDao(this.database, this.changeListener)
-      : _responseInsertionAdapter = InsertionAdapter(
+      : _queryAdapter = QueryAdapter(database),
+        _responseInsertionAdapter = InsertionAdapter(
             database,
             'Response',
             (Response item) => <String, Object?>{
                   'id': item.id,
                   'idEvaluation': item.idEvaluation,
+                  'idProyecto': item.idProyecto,
                   'idOption': item.idOption,
                   'strOption': item.strOption
                 }),
@@ -341,6 +357,7 @@ class _$ResponseDao extends ResponseDao {
             (Response item) => <String, Object?>{
                   'id': item.id,
                   'idEvaluation': item.idEvaluation,
+                  'idProyecto': item.idProyecto,
                   'idOption': item.idOption,
                   'strOption': item.strOption
                 }),
@@ -351,6 +368,7 @@ class _$ResponseDao extends ResponseDao {
             (Response item) => <String, Object?>{
                   'id': item.id,
                   'idEvaluation': item.idEvaluation,
+                  'idProyecto': item.idProyecto,
                   'idOption': item.idOption,
                   'strOption': item.strOption
                 });
@@ -359,11 +377,26 @@ class _$ResponseDao extends ResponseDao {
 
   final StreamController<String> changeListener;
 
+  final QueryAdapter _queryAdapter;
+
   final InsertionAdapter<Response> _responseInsertionAdapter;
 
   final UpdateAdapter<Response> _responseUpdateAdapter;
 
   final DeletionAdapter<Response> _responseDeletionAdapter;
+
+  @override
+  Future<List<Response>> findResponsesByVisitId(int idProyecto) async {
+    return _queryAdapter.queryList(
+        'SELECT * FROM Response WHERE idProyecto = ?1',
+        mapper: (Map<String, Object?> row) => Response(
+            id: row['id'] as int?,
+            strOption: row['strOption'] as String,
+            idProyecto: row['idProyecto'] as int,
+            idOption: row['idOption'] as int,
+            idEvaluation: row['idEvaluation'] as int),
+        arguments: [idProyecto]);
+  }
 
   @override
   Future<void> insertSingle(Response elemento) async {
@@ -414,7 +447,8 @@ class _$VisitDao extends VisitDao {
                   'nombreBeneficiario': item.nombreBeneficiario,
                   'nombreProyecto': item.nombreProyecto,
                   'nombreInstrumento': item.nombreInstrumento,
-                  'telefonoContacto': item.telefonoContacto
+                  'telefonoContacto': item.telefonoContacto,
+                  'guardado': item.guardado ? 1 : 0
                 }),
         _visitUpdateAdapter = UpdateAdapter(
             database,
@@ -430,7 +464,8 @@ class _$VisitDao extends VisitDao {
                   'nombreBeneficiario': item.nombreBeneficiario,
                   'nombreProyecto': item.nombreProyecto,
                   'nombreInstrumento': item.nombreInstrumento,
-                  'telefonoContacto': item.telefonoContacto
+                  'telefonoContacto': item.telefonoContacto,
+                  'guardado': item.guardado ? 1 : 0
                 }),
         _visitDeletionAdapter = DeletionAdapter(
             database,
@@ -446,7 +481,8 @@ class _$VisitDao extends VisitDao {
                   'nombreBeneficiario': item.nombreBeneficiario,
                   'nombreProyecto': item.nombreProyecto,
                   'nombreInstrumento': item.nombreInstrumento,
-                  'telefonoContacto': item.telefonoContacto
+                  'telefonoContacto': item.telefonoContacto,
+                  'guardado': item.guardado ? 1 : 0
                 });
 
   final sqflite.DatabaseExecutor database;
@@ -474,7 +510,8 @@ class _$VisitDao extends VisitDao {
             nombreBeneficiario: row['nombreBeneficiario'] as String,
             nombreInstrumento: row['nombreInstrumento'] as String,
             nombreProyecto: row['nombreProyecto'] as String,
-            telefonoContacto: row['telefonoContacto'] as String));
+            telefonoContacto: row['telefonoContacto'] as String,
+            guardado: (row['guardado'] as int) != 0));
   }
 
   @override
@@ -506,5 +543,109 @@ class _$VisitDao extends VisitDao {
   @override
   Future<void> deleteMultiple(List<Visit> elementos) async {
     await _visitDeletionAdapter.deleteList(elementos);
+  }
+}
+
+class _$AttachmentDao extends AttachmentDao {
+  _$AttachmentDao(this.database, this.changeListener)
+      : _queryAdapter = QueryAdapter(database),
+        _attachmentInsertionAdapter = InsertionAdapter(
+            database,
+            'Attachment',
+            (Attachment item) => <String, Object?>{
+                  'id': item.id,
+                  'idVisita': item.idVisita,
+                  'idEvaluation': item.idEvaluation,
+                  'type': item.type,
+                  'binaryFile': item.binaryFile
+                }),
+        _attachmentUpdateAdapter = UpdateAdapter(
+            database,
+            'Attachment',
+            ['id'],
+            (Attachment item) => <String, Object?>{
+                  'id': item.id,
+                  'idVisita': item.idVisita,
+                  'idEvaluation': item.idEvaluation,
+                  'type': item.type,
+                  'binaryFile': item.binaryFile
+                }),
+        _attachmentDeletionAdapter = DeletionAdapter(
+            database,
+            'Attachment',
+            ['id'],
+            (Attachment item) => <String, Object?>{
+                  'id': item.id,
+                  'idVisita': item.idVisita,
+                  'idEvaluation': item.idEvaluation,
+                  'type': item.type,
+                  'binaryFile': item.binaryFile
+                });
+
+  final sqflite.DatabaseExecutor database;
+
+  final StreamController<String> changeListener;
+
+  final QueryAdapter _queryAdapter;
+
+  final InsertionAdapter<Attachment> _attachmentInsertionAdapter;
+
+  final UpdateAdapter<Attachment> _attachmentUpdateAdapter;
+
+  final DeletionAdapter<Attachment> _attachmentDeletionAdapter;
+
+  @override
+  Future<List<Attachment>> findAttachmentsByVisitId(int idVisita) async {
+    return _queryAdapter.queryList(
+        'SELECT * FROM Attachment WHERE idVisita = ?1',
+        mapper: (Map<String, Object?> row) => Attachment(
+            id: row['id'] as int?,
+            idVisita: row['idVisita'] as int,
+            idEvaluation: row['idEvaluation'] as int,
+            type: row['type'] as String,
+            binaryFile: row['binaryFile'] as String),
+        arguments: [idVisita]);
+  }
+
+  @override
+  Future<Attachment?> findAttachmentsByEvaluationId(
+      int idVisita, int idEvaluation) async {
+    return _queryAdapter.query(
+        'SELECT * FROM Attachment WHERE idVisita = ?1 AND idEvaluation = ?2 LIMIT 1',
+        mapper: (Map<String, Object?> row) => Attachment(id: row['id'] as int?, idVisita: row['idVisita'] as int, idEvaluation: row['idEvaluation'] as int, type: row['type'] as String, binaryFile: row['binaryFile'] as String),
+        arguments: [idVisita, idEvaluation]);
+  }
+
+  @override
+  Future<void> insertSingle(Attachment elemento) async {
+    await _attachmentInsertionAdapter.insert(
+        elemento, OnConflictStrategy.abort);
+  }
+
+  @override
+  Future<void> insertMultiple(List<Attachment> elementos) async {
+    await _attachmentInsertionAdapter.insertList(
+        elementos, OnConflictStrategy.abort);
+  }
+
+  @override
+  Future<void> updateSingle(Attachment elemento) async {
+    await _attachmentUpdateAdapter.update(elemento, OnConflictStrategy.abort);
+  }
+
+  @override
+  Future<void> updateMultiple(List<Attachment> elementos) async {
+    await _attachmentUpdateAdapter.updateList(
+        elementos, OnConflictStrategy.abort);
+  }
+
+  @override
+  Future<void> deleteSingle(Attachment elemento) async {
+    await _attachmentDeletionAdapter.delete(elemento);
+  }
+
+  @override
+  Future<void> deleteMultiple(List<Attachment> elementos) async {
+    await _attachmentDeletionAdapter.deleteList(elementos);
   }
 }

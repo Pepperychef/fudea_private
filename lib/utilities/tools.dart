@@ -1,15 +1,22 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:fudea/data/daos/attachment_dao.dart';
 import 'package:fudea/data/daos/option_dao.dart';
+import 'package:fudea/data/daos/response_dao.dart';
 import 'package:fudea/data/daos/visit_dao.dart';
+import 'package:fudea/data/database/database.dart';
+import 'package:fudea/data/entities/attachment.dart';
 import 'package:fudea/data/entities/evaluation.dart';
 import 'package:fudea/data/entities/option.dart';
 import 'package:fudea/data/entities/visit.dart';
+import 'package:fudea/utilities/constantes.dart';
 import 'package:fudea/utilities/future_daos.dart';
 import 'package:intl/intl.dart';
+import 'package:http/http.dart' as http;
 
 import '../data/daos/evaluation_dao.dart';
+import '../data/entities/response.dart';
 
 String getFirstName(String nombre) {
   if (nombre != null) {
@@ -119,6 +126,23 @@ Future<List<Map<int,Option>>> fillOptions (List<Evaluation> preguntas, OptionDao
 
 }
 
+Future<void> saveAttachemnts({required Attachment data, required bool finalSave, required int idEvaluation})async{
+
+  String _path = data.binaryFile;
+  AttachmentDao _dao = await FutureDaos().attachmentDaoFuture();
+
+  if(finalSave){
+    String _tmp = await codifyBinary(_path);
+    data = Attachment(id: data.id, idVisita: data.idVisita, type: data.type, binaryFile: _tmp, idEvaluation: idEvaluation);
+    _dao.updateSingle(data);
+  }else{
+    _dao.insertSingle(data);
+  }
+
+}
+
+
+
 Future<List<Visit>> saveData({required Map<String, dynamic> list}) async {
   List list1 = list['VISITAS'];
 
@@ -140,10 +164,12 @@ Future<List<Visit>> saveData({required Map<String, dynamic> list}) async {
         nombreInstrumento: map1['nombre instrumento'].toString(),
         nombreProyecto: map1['nombre proyecto'].toString(),
         telefonoContacto: map1['teléfono contacto'].toString(),
+        guardado: false,
       );
 
       for (Map map2 in map1['evaluacion']) {
         Evaluation eval = Evaluation(
+          idProyecto: map1['ID proyecto'],
           idVisita: visit.idProyecto,
           tipo: map2['tipo'],
           idPregunta: map2['id_pregunta'],
@@ -169,5 +195,77 @@ Future<List<Visit>> saveData({required Map<String, dynamic> list}) async {
 
   List<Visit> listResponse = await visitDao.findEverything();
   return listResponse;
+
+}
+
+
+
+Future<void> sendFilesToServer ({required List<Visit> visitas, required int idUsuario})async{
+
+  AttachmentDao _attachmentDao = await FutureDaos().attachmentDaoFuture();
+  ResponseDao _responseDao = await FutureDaos().responseDaoFuture();
+
+  List visitas=[];
+  for (Visit visit in visitas){
+
+    List<Response> _tmp = await _responseDao.findResponsesByVisitId(visit.idProyecto);
+    List respuestas= [];
+    for(Response response in _tmp){
+      Map respData = {
+        "id_pregunta": response.idEvaluation,
+        "id_respuesta": response.idOption,
+        "texto_respuesta": response.strOption,
+      };
+      respuestas.add(respData);
+    }
+    List<Attachment> attachments = await _attachmentDao.findAttachmentsByVisitId(visit.idProyecto);
+
+    String imgActa= '';
+    String imgEvidencia = '';
+    String arch_audio = '';
+
+    for(Attachment att in attachments){
+
+      String binary = await codifyBinary(att.binaryFile);
+
+      case2(att.type, {
+        'img_acta': imgActa = binary,
+        'img_evidencia': imgEvidencia = binary,
+        'arch_audio': arch_audio = arch_audio
+      }
+      );
+
+    }
+
+    Map visitData = {
+      "id_visita": visit.idProyecto,
+      "img_acta": imgActa,
+      "img_evidencia": imgEvidencia,
+      "arch_audio": arch_audio,
+      "posicion":{
+        "latitud": 0,
+        "Longitud": 0,
+      } ,
+      "evaluacuion": respuestas,
+
+    };
+    visitas.add(visitData);
+
+  }
+
+  Map data = {
+    'idUsuario': idUsuario,
+    'visitas': visitas
+  };
+
+  Constantes constantes = Constantes();
+
+  var response = await http.post(Uri.parse('${constantes.url}/upload'), body: data);
+
+  if(response.statusCode != 400){
+    AppDatabase _db = await constantes.databaseFuture();
+    await _db.clearAllTables();
+  }
+
 
 }

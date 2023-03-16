@@ -1,24 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:fudea/data/entities/evaluation.dart';
-import 'package:fudea/data/entities/option.dart';
-import 'package:fudea/data/entities/response.dart';
-import 'package:fudea/data/entities/visit.dart';
-import 'package:fudea/pages/summary.dart';
-import 'package:fudea/providers/provider_evaluacion.dart';
-import 'package:fudea/providers/provider_summary.dart';
-import 'package:fudea/utilities/tools.dart';
 import 'package:intl/intl.dart';
-import 'package:provider/provider.dart';
 
-import '../data/daos/evaluation_dao.dart';
-import '../data/daos/option_dao.dart';
-import '../utilities/future_daos.dart';
+import '../data/entities/visit.dart';
 
-class DailyVisits extends StatelessWidget {
+class SavedVisits extends StatelessWidget{
+
   List<Visit> visits;
+  SavedVisits({required this.visits});
 
-  DailyVisits({required this.visits});
 
   @override
   Widget build(BuildContext context) {
@@ -39,20 +29,20 @@ class DailyVisits extends StatelessWidget {
                           Container(
                             decoration: const BoxDecoration(
                                 gradient: LinearGradient(
-                              begin: Alignment.topCenter,
-                              end: Alignment.bottomCenter,
-                              colors: <Color>[
-                                Color.fromRGBO(28, 59, 112, 1),
-                                Color.fromRGBO(0, 95, 146, 1)
-                              ],
-                            )),
+                                  begin: Alignment.topCenter,
+                                  end: Alignment.bottomCenter,
+                                  colors: <Color>[
+                                    Color.fromRGBO(28, 59, 112, 1),
+                                    Color.fromRGBO(0, 95, 146, 1)
+                                  ],
+                                )),
                           ),
                           Container(
                             height: (MediaQuery.of(context).size.height) / 8.5,
                             alignment: Alignment.topCenter,
                             margin: EdgeInsets.only(
                                 top:
-                                    (MediaQuery.of(context).size.height) / 16.5,
+                                (MediaQuery.of(context).size.height) / 16.5,
                                 right: (MediaQuery.of(context).size.height) /
                                     26.5),
                             child: Row(
@@ -63,8 +53,8 @@ class DailyVisits extends StatelessWidget {
                                       Navigator.pop(context);
                                     },
                                     iconSize:
-                                        (MediaQuery.of(context).size.height) /
-                                            26.5,
+                                    (MediaQuery.of(context).size.height) /
+                                        26.5,
                                     color: Colors.white,
                                     icon: const Icon(CupertinoIcons.back)),
                                 Text(
@@ -73,8 +63,8 @@ class DailyVisits extends StatelessWidget {
                                   style: TextStyle(
                                       color: Colors.white,
                                       fontSize:
-                                          (MediaQuery.of(context).size.height) /
-                                              35.5),
+                                      (MediaQuery.of(context).size.height) /
+                                          35.5),
                                 ),
                               ],
                             ),
@@ -92,8 +82,8 @@ class DailyVisits extends StatelessWidget {
                                 style: TextStyle(
                                     color: Colors.white,
                                     fontSize:
-                                        (MediaQuery.of(context).size.height) /
-                                            46.5),
+                                    (MediaQuery.of(context).size.height) /
+                                        46.5),
                               ),
                               margin: EdgeInsets.only(
                                   left: (MediaQuery.of(context).size.height) /
@@ -129,44 +119,7 @@ class DailyVisits extends StatelessWidget {
                           children: List.generate(visits.length, (index) {
                             return GestureDetector(
                               onTap: () async {
-                                OptionDao optionDao =
-                                    await FutureDaos().optionDaoFuture();
-                                EvaluationDao evaluationDao =
-                                    await FutureDaos().evaluationDaoFuture();
 
-                                List<Evaluation> listEvaluation =
-                                    await evaluationDao
-                                        .findEvaluationsByVisitId(
-                                            visits[index].idProyecto);
-
-                                List<Map<int, Option>> listOptions =
-                                    await fillOptions(
-                                        listEvaluation, optionDao);
-
-                                List<List<Response>> listResponses =
-                                    List.generate(
-                                        listEvaluation.length, (index) => []);
-
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => MultiProvider(
-                                                child: Summary(
-                                                  localId: index,
-                                                  visit: visits[index],
-                                                ),
-                                                providers: [
-                                                  ChangeNotifierProvider.value(
-                                                      value: ProviderSummary()),
-                                                  ChangeNotifierProvider.value(
-                                                      value: ProviderEvaluacion(
-                                                          listEvaluation:
-                                                              listEvaluation,
-                                                          listOptions:
-                                                              listOptions,
-                                                          listResponses:
-                                                              listResponses))
-                                                ])));
                               },
                               child: Card(
                                 margin: const EdgeInsets.symmetric(
@@ -192,15 +145,15 @@ class DailyVisits extends StatelessWidget {
                                       )),
                                   child: Column(
                                     crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                    CrossAxisAlignment.start,
                                     children: [
                                       Text(
                                         visits[index].nombreBeneficiario,
                                         style: TextStyle(
                                             color: Colors.white70,
                                             fontSize: (MediaQuery.of(context)
-                                                    .size
-                                                    .height) /
+                                                .size
+                                                .height) /
                                                 46.5),
                                       ),
                                       Text(
@@ -208,8 +161,8 @@ class DailyVisits extends StatelessWidget {
                                         style: TextStyle(
                                             color: Colors.white70,
                                             fontSize: (MediaQuery.of(context)
-                                                    .size
-                                                    .height) /
+                                                .size
+                                                .height) /
                                                 46.5),
                                       ),
                                       Text(
@@ -217,8 +170,8 @@ class DailyVisits extends StatelessWidget {
                                         style: TextStyle(
                                             color: Colors.white70,
                                             fontSize: (MediaQuery.of(context)
-                                                    .size
-                                                    .height) /
+                                                .size
+                                                .height) /
                                                 46.5),
                                       ),
                                       Text(
@@ -226,8 +179,8 @@ class DailyVisits extends StatelessWidget {
                                         style: TextStyle(
                                             color: Colors.white70,
                                             fontSize: (MediaQuery.of(context)
-                                                    .size
-                                                    .height) /
+                                                .size
+                                                .height) /
                                                 46.5),
                                       ),
                                     ],
@@ -246,4 +199,5 @@ class DailyVisits extends StatelessWidget {
       ),
     );
   }
+
 }

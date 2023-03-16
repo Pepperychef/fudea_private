@@ -13,6 +13,7 @@ class Visit{
   String nombreProyecto;
   String nombreInstrumento;
   String telefonoContacto;
+  bool guardado;
 
   Visit({
     this.id,
@@ -24,7 +25,8 @@ class Visit{
     required this.nombreBeneficiario,
     required this.nombreInstrumento,
     required this.nombreProyecto,
-    required this.telefonoContacto
+    required this.telefonoContacto,
+    required this.guardado
 });
 
 

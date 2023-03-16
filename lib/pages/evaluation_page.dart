@@ -1,14 +1,17 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fudea/providers/provider_grabador_encuesta.dart';
 import 'package:fudea/widgets/quiz_types.dart';
 import 'package:provider/provider.dart';
 
 import '../data/entities/evaluation.dart';
 import '../providers/provider_evaluacion.dart';
+import '../widgets_encuesta_formulario/respuesta_audio.dart';
 
 class EvaluationPage extends StatelessWidget{
 
   late ProviderEvaluacion _provider;
+  late ProviderGrabadorEncuesta _providerGrabador;
 
   @override
   Widget build(BuildContext context) {
@@ -69,11 +72,24 @@ class EvaluationPage extends StatelessWidget{
                             alignment: Alignment.bottomCenter,
                             child: Container(
                               alignment: Alignment.center,
-                              child:  Icon(
-                              CupertinoIcons.mic,
-                              color: Colors.white,
-                              size: (MediaQuery.of(context).size.height) / 20.5,
-                            ),
+                              child:  RespuestaAudio(
+                                completada: false,
+                                onPressedGuardar: () => _providerGrabador.saveRecording(),
+                                onPressedStart: () {
+                                  _providerGrabador.startRecording(context);
+                                },
+                                enabled: true,
+                                savedPath:  _providerGrabador.valueRespuesta,
+                                onPressedBorrar: () => _providerGrabador.deleteRecording(),
+                                isRecording: _providerGrabador.isRecording,
+                                recording: _providerGrabador.recording,
+                                playerState: _providerGrabador.playerState,
+                                stop: () => _providerGrabador.stop(),
+                                duration: _providerGrabador.duration,
+                                position: _providerGrabador.position,
+                                play: () => _providerGrabador.play(),
+                                textDuration: _providerGrabador.textDuration,
+                              ),
 
                               height: MediaQuery.of(context).size.height / 16,
                               width: MediaQuery.of(context).size.width / 2.8,
@@ -104,6 +120,7 @@ class EvaluationPage extends StatelessWidget{
 
                             return MultiProvider(
                                 child: QuizTypes(
+                                  idProyecto: _provider.listEvaluation[index].idProyecto,
                                     tipo: _provider.listEvaluation[index].tipo,
                                     permiteComentario: false,
                                     tituloComentario: _provider.listEvaluation[index].textoPregunta,

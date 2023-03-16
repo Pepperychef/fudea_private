@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fudea/pages/daily_visits.dart';
+import 'package:fudea/utilities/constantes.dart';
 import 'package:fudea/utilities/tools.dart';
 import 'package:fudea/widgets/home_buttons.dart';
 import 'package:http/http.dart' as http;
@@ -14,6 +15,8 @@ class Home extends StatelessWidget {
   int userID;
   String userName;
   String user;
+
+  Constantes constantes = Constantes();
 
   Home({required this.user, required this.userID, required this.userName});
 
@@ -97,11 +100,9 @@ class Home extends StatelessWidget {
                             false,
                             (MediaQuery.of(context).size.height) / 36.5),
                         onPressed: () async {
-                          String url =
-                              'http://vps-2872295-x.dattaweb.com:8069/operaciones/app/visitas/';
 
                           var response = await http.get(
-                            Uri.parse(url),
+                            Uri.parse(constantes.url),
                             headers: {'User-Id': '$userID'},
                           );
 

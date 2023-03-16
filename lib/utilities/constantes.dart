@@ -2,8 +2,11 @@ import 'package:floor/floor.dart';
 import 'package:fudea/data/database/database.dart';
 
 class Constantes {
-  static const String databaseName = 'alfaapp_database.db';
-  static const int databaseVersion = 3;
+  static const String databaseName = 'peppery_database.db';
+  static const int databaseVersion = 1;
+  String url =
+      'http://vps-2872295-x.dattaweb.com:8069/operaciones/app/visitas/';
+
 
   Future<AppDatabase> databaseFuture() async {
     return await $FloorAppDatabase

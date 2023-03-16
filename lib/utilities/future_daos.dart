@@ -3,6 +3,7 @@ import 'package:fudea/data/daos/option_dao.dart';
 import 'package:fudea/data/daos/response_dao.dart';
 import 'package:fudea/data/daos/visit_dao.dart';
 
+import '../data/daos/attachment_dao.dart';
 import 'constantes.dart';
 
 class FutureDaos{
@@ -24,6 +25,12 @@ class FutureDaos{
   Future<VisitDao> visitDaoFuture() async {
     final _database = await Constantes().databaseFuture();
     final _dao = _database.visitDao;
+    return _dao;
+  }
+
+  Future<AttachmentDao> attachmentDaoFuture() async{
+    final _database = await Constantes().databaseFuture();
+    final _dao = _database.attachmentDao;
     return _dao;
   }
 }

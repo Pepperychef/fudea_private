@@ -22,6 +22,7 @@ class QuizTypes extends StatelessWidget {
   bool validationRequired;
   String validationMinDate;
   String validationMaxDate;
+  int idProyecto;
 
   late ProviderEvaluacion _provider;
 
@@ -32,6 +33,7 @@ class QuizTypes extends StatelessWidget {
       required this.index,
       required this.validationRequired,
       required this.validationMaxDate,
+        required this.idProyecto,
       required this.validationMinDate});
 
   @override
@@ -40,15 +42,15 @@ class QuizTypes extends StatelessWidget {
 
     switch (tipo) {
       case 'opcion':
-        return prepareSimpleChoice(context);
+        return prepareSimpleChoice(context, idProyecto);
       case 'seleccion':
-        return prepareMultipleChoice(context);
+        return prepareMultipleChoice(context, idProyecto);
       case 'texto':
-        return prepareTextBox(context);
+        return prepareTextBox(context, idProyecto);
       case 'bool':
-        return prepareBoolChoice(context);
+        return prepareBoolChoice(context, idProyecto);
       case 'nota':
-        return prepareScore(context);
+        return prepareScore(context, idProyecto);
       default:
         return Container();
     }
@@ -56,6 +58,7 @@ class QuizTypes extends StatelessWidget {
 
   Widget prepareSimpleChoice(
     BuildContext context,
+      int idProyecto
   ) {
     List<Option> _listOptions = _provider.listOptions[index].values.toList();
     List<Response> _response = _provider.listResponses[index];
@@ -77,6 +80,7 @@ class QuizTypes extends StatelessWidget {
                     _provider.listResponses[index] = [];
                     _provider.listResponses[index] = [
                       Response(
+                          idProyecto: idProyecto,
                           strOption: '',
                           idOption: _listOptions[index].idOption,
                           idEvaluation: _listOptions[index].idEvaluation)
@@ -84,6 +88,7 @@ class QuizTypes extends StatelessWidget {
                   } else {
                     _provider.listResponses.add([
                       Response(
+                          idProyecto: idProyecto,
                           strOption: '',
                           idOption: _listOptions[index].idOption,
                           idEvaluation: _listOptions[index].idEvaluation)
@@ -141,7 +146,7 @@ class QuizTypes extends StatelessWidget {
         }));
   }
 
-  Widget prepareMultipleChoice(BuildContext context) {
+  Widget prepareMultipleChoice(BuildContext context, int idProyecto) {
     List<Option> _listOptions = _provider.listOptions[index].values.toList();
     List<Response> _response = _provider.listResponses[index];
     return RespuestaSeleccionMultiple(
@@ -169,6 +174,7 @@ class QuizTypes extends StatelessWidget {
                   List<Response> _tmp = _response;
 
                   Response _responseTemp = Response(
+                      idProyecto: idProyecto,
                       strOption: '',
                       idOption: _listOptions[index].idOption,
                       idEvaluation: _listOptions[index].idEvaluation);
@@ -246,7 +252,7 @@ class QuizTypes extends StatelessWidget {
         }));
   }
 
-  Widget prepareTextBox(BuildContext context) {
+  Widget prepareTextBox(BuildContext context, int idProyecto) {
     List<Option> _listOptions = _provider.listOptions[index].values.toList();
     List<Response> _response = _provider.listResponses[index];
     return RespuestaTexto(
@@ -261,6 +267,7 @@ class QuizTypes extends StatelessWidget {
 
           _response[0] = Response(
               strOption: value,
+              idProyecto: idProyecto,
               idOption: 0,
               idEvaluation: _provider.listEvaluation[index].idPregunta);
 
@@ -268,6 +275,7 @@ class QuizTypes extends StatelessWidget {
           _response.add(
             Response(
                 strOption: value,
+                idProyecto: idProyecto,
                 idOption: 0,
                 idEvaluation: _provider.listEvaluation[index].idPregunta)
           );
@@ -278,7 +286,7 @@ class QuizTypes extends StatelessWidget {
     );
   }
 
-  Widget prepareBoolChoice(BuildContext context) {
+  Widget prepareBoolChoice(BuildContext context, int idProyecto) {
     List<Option> _listOptions = _provider.listOptions[index].values.toList();
     List<Response> _response = _provider.listResponses[index];
     return RespuestaSeleccionBinaria(
@@ -300,6 +308,7 @@ class QuizTypes extends StatelessWidget {
 
                     _provider.listResponses.add([
                       Response(
+                          idProyecto: idProyecto,
                           strOption: '',
                           idOption: _listOptions[index].idOption,
                           idEvaluation: _listOptions[index].idEvaluation)
@@ -307,6 +316,7 @@ class QuizTypes extends StatelessWidget {
                   } else {
                     _provider.listResponses.add([
                       Response(
+                          idProyecto: idProyecto,
                           strOption: '',
                           idOption: _listOptions[index].idOption,
                           idEvaluation: _listOptions[index].idEvaluation)
@@ -363,7 +373,7 @@ class QuizTypes extends StatelessWidget {
         }));
   }
 
-  Widget prepareScore(BuildContext context) {
+  Widget prepareScore(BuildContext context, idProyecto) {
     List<Option> _listOptions = _provider.listOptions[index].values.toList();
     List<Response> _response = _provider.listResponses[index];
 
@@ -399,6 +409,7 @@ class QuizTypes extends StatelessWidget {
 
                     _provider.listResponses.add([
                       Response(
+                          idProyecto: idProyecto,
                           strOption: '',
                           idOption: _listOptions[index].idOption,
                           idEvaluation: _listOptions[index].idEvaluation)
@@ -406,6 +417,7 @@ class QuizTypes extends StatelessWidget {
                   } else {
                     _provider.listResponses.add([
                       Response(
+                          idProyecto: idProyecto,
                           strOption: '',
                           idOption: _listOptions[index].idOption,
                           idEvaluation: _listOptions[index].idEvaluation)

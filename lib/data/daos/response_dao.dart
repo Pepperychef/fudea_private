@@ -5,6 +5,10 @@ import '../entities/response.dart';
 @dao
 abstract class ResponseDao{
 
+  @Query('SELECT * FROM Response WHERE idProyecto = :idProyecto')
+  Future<List<Response>> findResponsesByVisitId(int idProyecto);
+
+
   @insert
   Future<void> insertSingle(Response elemento);
 

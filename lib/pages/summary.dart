@@ -1,7 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:fudea/data/entities/visit.dart';
 import 'package:fudea/pages/evaluation_page.dart';
+import 'package:fudea/providers/provider_summary.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/provider_evaluacion.dart';
@@ -9,15 +11,18 @@ import '../providers/provider_evaluacion.dart';
 class Summary extends StatelessWidget {
 
   int localId;
+  Visit visit;
 
   late ProviderEvaluacion _providerEvaluacion;
+  late ProviderSummary _providerSummary;
 
-  Summary({Key? key, required this.localId}) : super(key: key);
+  Summary({Key? key, required this.localId, required this.visit}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
 
     _providerEvaluacion = Provider.of<ProviderEvaluacion>(context);
+    _providerSummary = Provider.of<ProviderSummary>(context);
 
     return Scaffold(
       body: SingleChildScrollView(
@@ -74,7 +79,10 @@ class Summary extends StatelessWidget {
                                 width: (MediaQuery.of(context).size.height) / 6.5,
                                 //square box; equal height and width so that it won't look like oval
                                 child: GestureDetector(
-                                  onTap: () {},
+                                  onTap: () {
+                                    _providerSummary.getImage(context, visit.idProyecto, 'img_acta');
+
+                                  },
                                   child: Card(
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(80),
@@ -156,7 +164,9 @@ class Summary extends StatelessWidget {
                                 width: (MediaQuery.of(context).size.height) / 6.5,
                                 //square box; equal height and width so that it won't look like oval
                                 child: GestureDetector(
-                                  onTap: () {},
+                                  onTap: () {
+                                    _providerSummary.getImage(context, visit.idProyecto, 'img_evidencia');
+                                  },
                                   child: Card(
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(80),

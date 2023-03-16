@@ -28,6 +28,12 @@
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>
 	<string>Main</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+    <string>Fudea le gustaria guardar fotos en la galeria</string>
+    <key>NSPhotoLibraryUsageDescription</key>
+    <string>Fudea le gustaria acceder a la galeria</string>
+    <key>NSLocationWhenInUseUsageDescription</key>
+    <string>Fudea necesita acceso a tu ubicacion</string>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
