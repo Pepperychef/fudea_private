@@ -187,10 +187,13 @@ class DailyVisits extends StatelessWidget {
                                       borderRadius: BorderRadius.circular(
                                           (MediaQuery.of(context).size.height) /
                                               46.5),
-                                      gradient: const LinearGradient(
+                                      gradient: LinearGradient(
                                         begin: Alignment.centerLeft,
                                         end: Alignment.centerRight,
-                                        colors: <Color>[
+                                        colors: visits[index].guardado? <Color>[
+                                          Colors.grey,
+                                          Colors.black45
+                                        ]: <Color>[
                                           Color.fromRGBO(0, 96, 157, 1),
                                           Color.fromRGBO(28, 59, 112, 1)
                                         ],

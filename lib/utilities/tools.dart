@@ -126,17 +126,24 @@ Future<List<Map<int,Option>>> fillOptions (List<Evaluation> preguntas, OptionDao
 
 }
 
-Future<void> saveAttachemnts({required Attachment data, required bool finalSave, required int idEvaluation})async{
+Future<void> saveAttachemnts({required Attachment data, required bool finalSave, required int idEvaluation, required String type})async{
 
   String _path = data.binaryFile;
   AttachmentDao _dao = await FutureDaos().attachmentDaoFuture();
 
+  Attachment? _tmp = await _dao.findAttachmentsByEvaluationIdAndType(data.idVisita, idEvaluation, type);
+
   if(finalSave){
-    String _tmp = await codifyBinary(_path);
-    data = Attachment(id: data.id, idVisita: data.idVisita, type: data.type, binaryFile: _tmp, idEvaluation: idEvaluation);
+    String _tmpbi = await codifyBinary(_path);
+    data = Attachment(id: data.id, idVisita: data.idVisita, type: data.type, binaryFile: _tmpbi, idEvaluation: idEvaluation);
     _dao.updateSingle(data);
   }else{
-    _dao.insertSingle(data);
+    if(_tmp != null){
+      data = Attachment(id: data.id, idVisita: data.idVisita, type: data.type, binaryFile: data.binaryFile, idEvaluation: idEvaluation);
+      _dao.updateSingle(data);
+    }else{
+      _dao.insertSingle(data);
+    }
   }
 
 }
@@ -215,7 +222,7 @@ Future<void> sendFilesToServer ({required List<Visit> visitas, required int idUs
   AttachmentDao _attachmentDao = await FutureDaos().attachmentDaoFuture();
   ResponseDao _responseDao = await FutureDaos().responseDaoFuture();
 
-  List visitas=[];
+  List visitas2=[];
   for (Visit visit in visitas){
 
     List<Response> _tmp = await _responseDao.findResponsesByVisitId(visit.idProyecto);
@@ -259,13 +266,13 @@ Future<void> sendFilesToServer ({required List<Visit> visitas, required int idUs
       "evaluacuion": respuestas.toString(),
 
     };
-    visitas.add(visitData);
+    visitas2.add(visitData);
 
   }
 
   Map data = {
     'idUsuario': idUsuario.toString(),
-    'visitas': visitas.toString()
+    'visitas': visitas2.toString()
   };
 
   Constantes constantes = Constantes();

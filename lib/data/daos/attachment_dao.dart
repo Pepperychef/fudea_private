@@ -10,6 +10,9 @@ abstract class AttachmentDao{
   @Query('SELECT * FROM Attachment WHERE idVisita = :idVisita AND idEvaluation = :idEvaluation LIMIT 1')
   Future<Attachment?> findAttachmentsByEvaluationId(int idVisita, int idEvaluation);
 
+  @Query('SELECT * FROM Attachment WHERE idVisita = :idVisita AND idEvaluation = :idEvaluation AND type = :type LIMIT 1')
+  Future<Attachment?> findAttachmentsByEvaluationIdAndType(int idVisita, int idEvaluation, String type);
+
 
   @insert
   Future<void> insertSingle(Attachment elemento);

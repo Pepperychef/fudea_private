@@ -83,7 +83,7 @@ class ProviderSummary with ChangeNotifier{
                           if (image!.path != null) {
                             String uri = image.path;
                             Attachment _data = Attachment(idVisita: idVisita, type: tipoFoto, binaryFile: uri, idEvaluation: 0);
-                            saveAttachemnts(data:_data, finalSave: false, idEvaluation: 0);
+                            saveAttachemnts(data:_data, finalSave: false, idEvaluation: 0, type: tipoFoto);
                           }
                         });
                         Navigator.pop(context);
@@ -118,7 +118,7 @@ class ProviderSummary with ChangeNotifier{
                           if (image!.path != null) {
                             String uri = image.path;
                             Attachment _data = Attachment(idVisita: idVisita, type: tipoFoto, binaryFile: uri, idEvaluation: 0);
-                            saveAttachemnts(data:_data, finalSave: false, idEvaluation: 0);
+                            saveAttachemnts(data:_data, finalSave: false, idEvaluation: 0, type: tipoFoto);
                           }
                         });
                         Navigator.pop(context);

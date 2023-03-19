@@ -56,7 +56,7 @@ class ProviderGrabadorEncuesta with ChangeNotifier{
     if (this.localFilePath != null) {
       if (this.localFilePath != '') {
         Attachment _tmp = Attachment(idVisita: visit.idProyecto, type: 'arch_audio', binaryFile: this.localFilePath!, idEvaluation: idEvaluation);
-        await saveAttachemnts(data: _tmp, finalSave: false, idEvaluation: idEvaluation);
+        await saveAttachemnts(data: _tmp, finalSave: false, idEvaluation: idEvaluation, type: 'arch_audio');
         Source _source = DeviceFileSource(localFilePath!);
         await audioPlugin.setSource(_source);
       }
@@ -96,8 +96,11 @@ class ProviderGrabadorEncuesta with ChangeNotifier{
     String resp = '';
     AttachmentDao _dao = await FutureDaos().attachmentDaoFuture();
     Attachment? _tmp = await _dao.findAttachmentsByEvaluationId(visit.idProyecto, idEvaluation);
-    resp = '${_tmp!.binaryFile}';
-    valueRespuesta = resp;
+    if(_tmp!= null){
+      resp = '${_tmp.binaryFile}';
+      valueRespuesta = resp;
+    }
+
 
   }
 

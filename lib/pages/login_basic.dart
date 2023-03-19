@@ -15,7 +15,7 @@ class LoginBasic extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
+    ToastContext().init(context);
     _providerLogin = Provider.of<ProviderLogin>(context);
 
 

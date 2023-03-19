@@ -48,7 +48,7 @@ class Grabador extends StatelessWidget {
 
     return  Center(
       child:  Padding(
-        padding:  const EdgeInsets.all(8.0),
+        padding:  const EdgeInsets.all(2.0),
         child:  Column(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: <Widget>[
@@ -61,7 +61,7 @@ class Grabador extends StatelessWidget {
                       ? IconButton(
                           onPressed:
                               isRecording ? onPressedGuardar : onPressedStart,
-                          iconSize: 60.0,
+                          iconSize: 40.0,
                           icon: Icon(isRecording ? Icons.save : Icons.mic),
 
                         )
