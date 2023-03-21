@@ -38,70 +38,58 @@ class Grabador extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Widget _buildProgressView() => Row(mainAxisSize: MainAxisSize.min, children: [
-          Text(
-            textDuration,
-            style: TextStyle(
-                fontSize: 24.0),
-          ),
-        ]);
 
     return  Center(
       child:  Padding(
         padding:  const EdgeInsets.all(2.0),
-        child:  Column(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: <Widget>[
-              Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  recording.path == '' ||
-                          recording.path == null ||
-                          isRecording && enabled
-                      ? IconButton(
-                          onPressed:
-                              isRecording ? onPressedGuardar : onPressedStart,
-                          iconSize: 40.0,
-                          icon: Icon(isRecording ? Icons.save : Icons.mic),
+        child:  Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            recording.path == '' ||
+                recording.path == null ||
+                isRecording && enabled
+                ? IconButton(
+              onPressed:
+              isRecording ? onPressedGuardar : onPressedStart,
+              iconSize: 40.0,
+              icon: Icon(isRecording ? Icons.save : Icons.mic),
 
-                        )
-                      : Container(),
-                  recording.path == '' || recording.path == null || isRecording
-                      ? Container()
-                      : IconButton(
-                          onPressed:
-                              playerState == PlayerState.playing || isRecording
-                                  ? null
-                                  : play,
-                          iconSize: 60.0,
-                          icon: Icon(Icons.play_arrow),
-                        ),
-                  recording.path == '' || recording.path == null || isRecording
-                      ? Container()
-                      : IconButton(
-                          onPressed: playerState == PlayerState.playing ||
-                                  playerState == PlayerState.paused
-                              ? stop
-                              : null,
-                          iconSize: 60.0,
-                          icon: Icon(Icons.stop),
-                        ),
-                  recording.path == '' || recording.path == null || isRecording
-                      ? Container()
-                      : IconButton(
-                          onPressed: enabled
-                              ? playerState == PlayerState.playing ||
-                                      isRecording
-                                  ? null
-                                  : onPressedBorrar
-                              : null,
-                          iconSize: 60.0,
-                          icon: Icon(Icons.delete),
-                        ),
-                ],
-              ),
-              duration != null ? _buildProgressView() : Container(),
-            ]),
+            )
+                : Container(),
+            recording.path == '' || recording.path == null || isRecording
+                ? Container()
+                : IconButton(
+              onPressed:
+              playerState == PlayerState.playing || isRecording
+                  ? null
+                  : play,
+              iconSize: 60.0,
+              icon: Icon(Icons.play_arrow),
+            ),
+            recording.path == '' || recording.path == null || isRecording
+                ? Container()
+                : IconButton(
+              onPressed: playerState == PlayerState.playing ||
+                  playerState == PlayerState.paused
+                  ? stop
+                  : null,
+              iconSize: 60.0,
+              icon: Icon(Icons.stop),
+            ),
+            recording.path == '' || recording.path == null || isRecording
+                ? Container()
+                : IconButton(
+              onPressed: enabled
+                  ? playerState == PlayerState.playing ||
+                  isRecording
+                  ? null
+                  : onPressedBorrar
+                  : null,
+              iconSize: 60.0,
+              icon: Icon(Icons.delete),
+            ),
+          ],
+        ),
       ),
     );
   }

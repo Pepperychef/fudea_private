@@ -4,10 +4,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fudea/pages/daily_visits.dart';
 import 'package:fudea/pages/saved_visits.dart';
+import 'package:fudea/providers/provider_visitas.dart';
 import 'package:fudea/utilities/constantes.dart';
 import 'package:fudea/utilities/tools.dart';
 import 'package:fudea/widgets/home_buttons.dart';
 import 'package:http/http.dart' as http;
+import 'package:provider/provider.dart';
 import 'package:toast/toast.dart';
 
 import '../widgets/contenido_boton_Login.dart';
@@ -110,11 +112,16 @@ class Home extends StatelessWidget {
                           Map<String, dynamic> list =
                               json.decode(response.body);
 
+
                           saveData(list: list).then((value) {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => DailyVisits(visits: value,)));
+                                    builder: (context) => MultiProvider(
+                                        child: DailyVisits(),
+                                        providers: [
+                                      ChangeNotifierProvider.value(value: ProviderVisitas(visits: value))
+                                    ])));
                           });
                         }),
                   ),

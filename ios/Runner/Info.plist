@@ -35,6 +35,8 @@
     <key>NSLocationWhenInUseUsageDescription</key>
     <string>Fudea necesita acceso a tu ubicacion</string>
 	<key>UISupportedInterfaceOrientations</key>
+	<string>Fudea necesita acceso a tu Microfono</string>
+    <key>NSMicrophoneUsageDescription</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
 		<string>UIInterfaceOrientationLandscapeLeft</string>

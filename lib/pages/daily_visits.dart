@@ -7,6 +7,7 @@ import 'package:fudea/data/entities/visit.dart';
 import 'package:fudea/pages/summary.dart';
 import 'package:fudea/providers/provider_evaluacion.dart';
 import 'package:fudea/providers/provider_summary.dart';
+import 'package:fudea/providers/provider_visitas.dart';
 import 'package:fudea/utilities/tools.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -16,12 +17,14 @@ import '../data/daos/option_dao.dart';
 import '../utilities/future_daos.dart';
 
 class DailyVisits extends StatelessWidget {
-  List<Visit> visits;
 
-  DailyVisits({required this.visits});
+  late ProviderVisitas _providerVisitas;
 
   @override
   Widget build(BuildContext context) {
+
+    _providerVisitas = Provider.of<ProviderVisitas>(context);
+
     return Scaffold(
       body: SingleChildScrollView(
         child: ConstrainedBox(
@@ -126,10 +129,10 @@ class DailyVisits extends StatelessWidget {
                         color: Colors.white,
                         child: ListView(
                           shrinkWrap: true,
-                          children: List.generate(visits.length, (index) {
+                          children: List.generate(_providerVisitas.visits.length, (index) {
                             return GestureDetector(
                               onTap: () async {
-                                if(!visits[index].guardado){
+                                if(!_providerVisitas.visits[index].guardado){
 
                                   OptionDao optionDao =
                                   await FutureDaos().optionDaoFuture();
@@ -139,7 +142,7 @@ class DailyVisits extends StatelessWidget {
                                   List<Evaluation> listEvaluation =
                                   await evaluationDao
                                       .findEvaluationsByVisitId(
-                                      visits[index].idProyecto);
+                                      _providerVisitas.visits[index].idProyecto);
 
                                   List<Map<int, Option>> listOptions =
                                   await fillOptions(
@@ -153,10 +156,12 @@ class DailyVisits extends StatelessWidget {
                                       MaterialPageRoute(
                                           builder: (context) => MultiProvider(
                                               child: Summary(
-                                                localId: visits[index].idProyecto,
-                                                visit: visits[index],
+                                                localId: _providerVisitas.visits[index].idProyecto,
+                                                visit: _providerVisitas.visits[index],
+                                                visitPositon: index,
                                               ),
                                               providers: [
+                                                ChangeNotifierProvider.value(value: _providerVisitas),
                                                 ChangeNotifierProvider.value(
                                                     value: ProviderSummary()),
                                                 ChangeNotifierProvider.value(
@@ -190,7 +195,7 @@ class DailyVisits extends StatelessWidget {
                                       gradient: LinearGradient(
                                         begin: Alignment.centerLeft,
                                         end: Alignment.centerRight,
-                                        colors: visits[index].guardado? <Color>[
+                                        colors: _providerVisitas.visits[index].guardado? <Color>[
                                           Colors.grey,
                                           Colors.black45
                                         ]: <Color>[
@@ -203,7 +208,7 @@ class DailyVisits extends StatelessWidget {
                                         CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        visits[index].nombreBeneficiario,
+                                        _providerVisitas.visits[index].nombreBeneficiario,
                                         style: TextStyle(
                                             color: Colors.white70,
                                             fontSize: (MediaQuery.of(context)
@@ -212,7 +217,7 @@ class DailyVisits extends StatelessWidget {
                                                 46.5),
                                       ),
                                       Text(
-                                        visits[index].dirContacto,
+                                        _providerVisitas.visits[index].dirContacto,
                                         style: TextStyle(
                                             color: Colors.white70,
                                             fontSize: (MediaQuery.of(context)
@@ -221,7 +226,7 @@ class DailyVisits extends StatelessWidget {
                                                 46.5),
                                       ),
                                       Text(
-                                        visits[index].telefonoContacto,
+                                        _providerVisitas.visits[index].telefonoContacto,
                                         style: TextStyle(
                                             color: Colors.white70,
                                             fontSize: (MediaQuery.of(context)
@@ -230,7 +235,7 @@ class DailyVisits extends StatelessWidget {
                                                 46.5),
                                       ),
                                       Text(
-                                        visits[index].emailContacto,
+                                        _providerVisitas.visits[index].emailContacto,
                                         style: TextStyle(
                                             color: Colors.white70,
                                             fontSize: (MediaQuery.of(context)

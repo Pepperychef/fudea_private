@@ -13,7 +13,7 @@ import '../data/entities/response.dart';
 class ProviderSummary with ChangeNotifier{
 
 
-  Future<void> saveResponses(List<List<Response>> respuestas, Visit visit) async{
+  Future<Visit> saveResponses(List<List<Response>> respuestas, Visit visit) async{
 
     FutureDaos futureDaos = FutureDaos();
     ResponseDao _dao = await futureDaos.responseDaoFuture();
@@ -38,8 +38,7 @@ class ProviderSummary with ChangeNotifier{
 
     _vdao.updateSingle(_tmp);
 
-
-
+    return _tmp;
 
   }
 

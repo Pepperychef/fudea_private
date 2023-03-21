@@ -109,7 +109,7 @@ class ProviderGrabadorEncuesta with ChangeNotifier{
 
       Map<Permission, PermissionStatus> permission = await [
         Permission.microphone,
-        Permission.manageExternalStorage
+        //Permission.manageExternalStorage
       ].request();
 
       //print('permisos ${permission.values}');

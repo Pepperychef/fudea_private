@@ -43,7 +43,8 @@ class ProviderLogin with ChangeNotifier{
       Permission.camera,
       Permission.locationWhenInUse,
       Permission.microphone,
-      Permission.manageExternalStorage
+      Permission.manageExternalStorage,
+      Permission.storage
     ].request();
 
     if(permission.containsValue(PermissionStatus.granted)){

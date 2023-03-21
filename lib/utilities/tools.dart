@@ -263,7 +263,7 @@ Future<void> sendFilesToServer ({required List<Visit> visitas, required int idUs
         "latitud": '0',
         "Longitud": '0',
       } ,
-      "evaluacuion": respuestas.toString(),
+      "evaluacion": respuestas.toString(),
 
     };
     visitas2.add(visitData);

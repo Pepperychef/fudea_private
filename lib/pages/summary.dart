@@ -5,6 +5,7 @@ import 'package:fudea/data/entities/visit.dart';
 import 'package:fudea/pages/evaluation_page.dart';
 import 'package:fudea/providers/provider_grabador_encuesta.dart';
 import 'package:fudea/providers/provider_summary.dart';
+import 'package:fudea/providers/provider_visitas.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/provider_evaluacion.dart';
@@ -13,18 +14,21 @@ import '../utilities/peppery_audio_recorder.dart';
 class Summary extends StatelessWidget {
 
   int localId;
+  int visitPositon;
   Visit visit;
 
   late ProviderEvaluacion _providerEvaluacion;
   late ProviderSummary _providerSummary;
+  late ProviderVisitas _providerVisitas;
 
-  Summary({Key? key, required this.localId, required this.visit}) : super(key: key);
+  Summary({Key? key, required this.localId, required this.visit, required this.visitPositon}) : super(key: key);
 
   @override
   Widget build(BuildContext _context) {
 
     _providerEvaluacion = Provider.of<ProviderEvaluacion>(_context);
     _providerSummary = Provider.of<ProviderSummary>(_context);
+    _providerVisitas = Provider.of<ProviderVisitas>(_context);
 
     return Scaffold(
       body: Builder(
@@ -206,7 +210,9 @@ class Summary extends StatelessWidget {
                                       //square box; equal height and width so that it won't look like oval
                                       child: GestureDetector(
                                         onTap: () async{
-                                          await _providerSummary.saveResponses(_providerEvaluacion.listResponses, visit);
+
+                                          _providerVisitas.visits[visitPositon] = await _providerSummary.saveResponses(_providerEvaluacion.listResponses, visit);
+                                          _providerVisitas.notifyListeners();
                                           Navigator.pop(context);
                                         },
                                         child: Card(

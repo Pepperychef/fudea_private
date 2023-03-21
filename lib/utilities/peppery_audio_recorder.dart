@@ -6,10 +6,10 @@ import 'package:flutter/services.dart';
 import 'package:path/path.dart' as p;
 
 class AudioRecorder {
-  static const MethodChannel _channel = const MethodChannel('audio_recorder');
+  static const MethodChannel _channel =  MethodChannel('audio_recorder');
 
   /// use [LocalFileSystem] to permit widget testing
-  static LocalFileSystem fs = LocalFileSystem();
+  static LocalFileSystem fs = const LocalFileSystem();
 
   static Future start(
       {required String path, required AudioOutputFormat audioOutputFormat}) async {
