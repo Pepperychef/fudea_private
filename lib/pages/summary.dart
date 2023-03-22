@@ -1,15 +1,17 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_audio_recorder2/flutter_audio_recorder2.dart';
 import 'package:fudea/data/entities/visit.dart';
 import 'package:fudea/pages/evaluation_page.dart';
 import 'package:fudea/providers/provider_grabador_encuesta.dart';
 import 'package:fudea/providers/provider_summary.dart';
 import 'package:fudea/providers/provider_visitas.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/provider_evaluacion.dart';
-import '../utilities/peppery_audio_recorder.dart';
+import '../utilities/tools.dart';
 
 class Summary extends StatelessWidget {
 
@@ -120,8 +122,11 @@ class Summary extends StatelessWidget {
                                     //square box; equal height and width so that it won't look like oval
                                     child: GestureDetector(
 
-                                      onTap: () {
+                                      onTap: () async {
                                         if(visit.incluyeEvaluacion){
+                                          final directory = await getApplicationDocumentsDirectory();
+                                          String _extraId = getIdByDateTime();
+                                          String path = '${directory.path}/respuesta${localId}$_extraId.m4a';
                                           Navigator.push(
                                               context,
                                               MaterialPageRoute(
@@ -129,11 +134,8 @@ class Summary extends StatelessWidget {
                                                       child: EvaluationPage(),
                                                       providers: [
                                                         ChangeNotifierProvider.value(value: _providerEvaluacion),
-                                                        ChangeNotifierProvider.value(value: ProviderGrabadorEncuesta(idEvaluation: localId, visit: visit, recording: Recording(
-                                                            duration: Duration(),
-                                                            audioOutputFormat: AudioOutputFormat.WAV,
-                                                            path: '',
-                                                            extension: '')))
+                                                        ChangeNotifierProvider.value(value: ProviderGrabadorEncuesta(idEvaluation: localId, visit: visit,
+                                                            recording: FlutterAudioRecorder2(path), localFilePath: path))
                                                       ])));
                                         }
                                       },

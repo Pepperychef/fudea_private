@@ -19,7 +19,7 @@ class SavedVisits extends StatelessWidget{
         onPressed: () {
           sendFilesToServer(visitas: visits, idUsuario: idUsuario);
         },
-        backgroundColor: Color.fromRGBO(0, 95, 146, 1),
+        backgroundColor: const Color.fromRGBO(0, 95, 146, 1),
         child: const Icon(CupertinoIcons.cloud_upload),
       ),
       body: SingleChildScrollView(

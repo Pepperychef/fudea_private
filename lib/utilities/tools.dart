@@ -139,7 +139,7 @@ Future<void> saveAttachemnts({required Attachment data, required bool finalSave,
     _dao.updateSingle(data);
   }else{
     if(_tmp != null){
-      data = Attachment(id: data.id, idVisita: data.idVisita, type: data.type, binaryFile: data.binaryFile, idEvaluation: idEvaluation);
+      data = Attachment(id: _tmp.id, idVisita: data.idVisita, type: data.type, binaryFile: data.binaryFile, idEvaluation: idEvaluation);
       _dao.updateSingle(data);
     }else{
       _dao.insertSingle(data);

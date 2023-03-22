@@ -2,7 +2,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../utilities/peppery_audio_recorder.dart';
 import 'grabador.dart';
 
 class RespuestaAudio extends StatelessWidget {
@@ -13,16 +12,9 @@ class RespuestaAudio extends StatelessWidget {
   VoidCallback onPressedGuardar;
   VoidCallback onPressedStart;
   VoidCallback onPressedBorrar;
-  bool isRecording = false;
-  Recording recording;
-  String? savedPath;
-  int position = 0;
-  int duration = 0;
-  PlayerState playerState;
-  VoidCallback play;
-  VoidCallback stop;
+  bool isRecording;
   bool enabled;
-  String textDuration;
+  double iconSize;
 
   RespuestaAudio(
       {required this.completada,
@@ -30,18 +22,11 @@ class RespuestaAudio extends StatelessWidget {
       required this.onPressedStart,
       required this.onPressedBorrar,
       required this.isRecording,
-      required this.recording,
-      required this.position,
-      required this.duration,
-      required this.playerState,
-      required this.play,
-      required this.stop,
+        required this.iconSize,
       this.enabled = false,
-      this.savedPath,
       this.labelText = "Ingrese Respuesta",
       this.isLista = false,
-      this.comentario = false,
-      required this.textDuration,});
+      this.comentario = false,});
 
   @override
   Widget build(BuildContext context) {
@@ -50,19 +35,12 @@ class RespuestaAudio extends StatelessWidget {
       width: double.infinity,
       child: Container(
         child: Grabador(
-          savedPath: savedPath,
           onPressedStart: onPressedStart,
           onPressedGuardar: onPressedGuardar,
           isRecording: isRecording,
-          recording: recording,
-          playerState: playerState,
-          stop: stop,
-          duration: duration,
           onPressedBorrar: onPressedBorrar,
-          play: play,
           enabled: enabled,
-          position: position,
-          textDuration: textDuration,
+          iconSize: iconSize,
         ),
       ),
     );

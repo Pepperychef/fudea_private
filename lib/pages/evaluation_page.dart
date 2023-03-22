@@ -75,25 +75,18 @@ class EvaluationPage extends StatelessWidget{
                               child: Container(
                                 alignment: Alignment.center,
                                 child:  RespuestaAudio(
+                                  iconSize: MediaQuery.of(context).size.height / 20,
                                   completada: false,
                                   onPressedGuardar: () => _providerGrabador.saveRecording(),
                                   onPressedStart: () {
                                     _providerGrabador.startRecording(context);
                                   },
                                   enabled: true,
-                                  savedPath:  _providerGrabador.valueRespuesta,
                                   onPressedBorrar: () => _providerGrabador.deleteRecording(),
                                   isRecording: _providerGrabador.isRecording,
-                                  recording: _providerGrabador.recording,
-                                  playerState: _providerGrabador.playerState,
-                                  stop: () => _providerGrabador.stop(),
-                                  duration: _providerGrabador.duration,
-                                  position: _providerGrabador.position,
-                                  play: () => _providerGrabador.play(),
-                                  textDuration: _providerGrabador.textDuration,
                                 ),
 
-                                height: MediaQuery.of(context).size.height / 10,
+                                height: MediaQuery.of(context).size.height / 15,
                                 width: MediaQuery.of(context).size.width / 2.8,
                                 decoration:  BoxDecoration(
                                     borderRadius: BorderRadius.only(
