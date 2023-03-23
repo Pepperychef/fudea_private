@@ -343,15 +343,22 @@ Future<void> sendFilesToServer ({required List<Visit> visitas, required int idUs
 
   Constantes constantes = Constantes();
 
-  var response = await http.post(Uri.parse('${constantes.url}upload'), body: data.toString());
+  var response = await http.post(Uri.parse('${constantes.url}upload'),
+      body: jsonEncode(<String, dynamic>{
+        'idUsuario': idUsuario,
+        'visitas': visitas2
+      }));
+
+  await Future.delayed(const Duration(seconds: 2));
 
   if(response.statusCode != 400){
     AppDatabase _db = await constantes.databaseFuture();
     await _db.clearAllTables();
+
     Navigator.of(context).pop();
   }
 
-  await Future.delayed(const Duration(seconds: 2));
+
 
   Navigator.of(context).pop();
 
