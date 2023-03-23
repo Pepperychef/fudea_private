@@ -17,7 +17,7 @@ class SavedVisits extends StatelessWidget{
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          sendFilesToServer(visitas: visits, idUsuario: idUsuario);
+          sendFilesToServer(visitas: visits, idUsuario: idUsuario, context: context);
         },
         backgroundColor: const Color.fromRGBO(0, 95, 146, 1),
         child: const Icon(CupertinoIcons.cloud_upload),

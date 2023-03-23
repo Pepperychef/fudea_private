@@ -12,6 +12,32 @@ import '../data/entities/response.dart';
 
 class ProviderSummary with ChangeNotifier{
 
+  bool imgActaSaved = false;
+
+  bool imgEvidenciaSaved = false;
+
+  Future<bool> onWillPop(BuildContext context) async{
+
+    return (await showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('¿Seguro que quieres salir?'),
+        content: const Text('Los datos de la visita se pueden perder'),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: const Text('No'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            child: const Text('Si'),
+          ),
+        ],
+      ),
+    )) ?? false;
+
+  }
+
 
   Future<Visit> saveResponses(List<List<Response>> respuestas, Visit visit) async{
 
@@ -34,6 +60,8 @@ class ProviderSummary with ChangeNotifier{
         nombreInstrumento: visit.nombreInstrumento,
         nombreProyecto: visit.nombreProyecto,
         telefonoContacto: visit.telefonoContacto,
+        longitud: visit.longitud,
+        latitud: visit.latitud,
         guardado: true);
 
     _vdao.updateSingle(_tmp);
@@ -83,6 +111,12 @@ class ProviderSummary with ChangeNotifier{
                             String uri = image.path;
                             Attachment _data = Attachment(idVisita: idVisita, type: tipoFoto, binaryFile: uri, idEvaluation: 0);
                             saveAttachemnts(data:_data, finalSave: false, idEvaluation: 0, type: tipoFoto);
+                            if(tipoFoto == 'img_acta'){
+                              imgActaSaved = true;
+                            }
+                            if(tipoFoto == 'img_evidencia'){
+                              imgEvidenciaSaved = true;
+                            }
                           }
                         });
                         Navigator.pop(context);
@@ -118,6 +152,12 @@ class ProviderSummary with ChangeNotifier{
                             String uri = image.path;
                             Attachment _data = Attachment(idVisita: idVisita, type: tipoFoto, binaryFile: uri, idEvaluation: 0);
                             saveAttachemnts(data:_data, finalSave: false, idEvaluation: 0, type: tipoFoto);
+                            if(tipoFoto == 'img_acta'){
+                              imgActaSaved = true;
+                            }
+                            if(tipoFoto == 'img_evidencia'){
+                              imgEvidenciaSaved = true;
+                            }
                           }
                         });
                         Navigator.pop(context);

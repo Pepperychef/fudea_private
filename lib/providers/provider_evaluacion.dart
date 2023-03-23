@@ -14,6 +14,10 @@ class ProviderEvaluacion with ChangeNotifier{
 
   int idActiveEvaluation = 0;
 
+  bool faltanDatos = true;
+
+
+
   ProviderEvaluacion({
     required this.listEvaluation,
     required this.listOptions,
@@ -24,6 +28,48 @@ class ProviderEvaluacion with ChangeNotifier{
 
     listResponses[index] = response;
     notifyListeners();
+
+  }
+
+  Future<bool> onWillPop(BuildContext context) async {
+
+
+    print(listResponses.length.toString());
+
+    faltanDatos = false;
+
+    for(List<Response> _tmp in listResponses){
+      if(_tmp.isEmpty){
+        faltanDatos = true;
+        break;
+      }
+    }
+
+    if(faltanDatos){
+      return (await showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text('¿Seguro que quieres salir?'),
+          content: const Text('Faltan respuestas por completar, Recuerda que no se pueden enviar los datos sin terminar la evaluación'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(false),
+              child: const Text('No'),
+            ),
+            TextButton(
+              onPressed: (){
+                Navigator.of(context).pop(true);
+                Navigator.of(context).pop();
+    } ,
+              child: const Text('Si'),
+            ),
+          ],
+        ),
+      )) ?? false;
+    }else{
+      Navigator.of(context).pop();
+      return true;
+    }
 
   }
 

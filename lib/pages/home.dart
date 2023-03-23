@@ -112,17 +112,44 @@ class Home extends StatelessWidget {
                           Map<String, dynamic> list =
                               json.decode(response.body);
 
+                          showDialog(
+                            context: context,
+                            barrierDismissible: false,
+                            builder: (context) => AlertDialog(
+                              content:
+                              Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: const [
+                                  // The loading indicator
+                                  CircularProgressIndicator(),
+                                  SizedBox(
+                                    height: 15,
+                                  ),
+                                  // Some text
+                                  Text('Cargando...')
+                                ],
+                              ),
+                            ),
+                          );
 
-                          saveData(list: list).then((value) {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => MultiProvider(
-                                        child: DailyVisits(),
-                                        providers: [
-                                      ChangeNotifierProvider.value(value: ProviderVisitas(visits: value))
-                                    ])));
+                          handleLocationPermission(context).then((value){
+
+                            if(value){
+                              saveData(list: list, context: context).then((value) {
+                                Navigator.of(context).pop();
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => MultiProvider(
+                                            child: DailyVisits(),
+                                            providers: [
+                                              ChangeNotifierProvider.value(value: ProviderVisitas(visits: value))
+                                            ])));
+                              });
+                            }
+
                           });
+
                         }),
                   ),
                   Container(

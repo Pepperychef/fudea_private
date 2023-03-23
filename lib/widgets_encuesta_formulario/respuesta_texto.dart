@@ -34,9 +34,7 @@ class RespuestaTexto extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    _controller..text = respuesta;
-    _controller.selection = TextSelection.fromPosition(
-        TextPosition(offset: _controller.text.length));
+    _controller.text = respuesta;
 
     return Container(
       margin: const EdgeInsets.only(bottom: 20),

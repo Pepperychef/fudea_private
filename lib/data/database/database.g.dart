@@ -96,7 +96,7 @@ class _$AppDatabase extends AppDatabase {
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `Response` (`id` INTEGER, `idEvaluation` INTEGER NOT NULL, `idProyecto` INTEGER NOT NULL, `idOption` INTEGER NOT NULL, `strOption` TEXT NOT NULL, PRIMARY KEY (`id`))');
         await database.execute(
-            'CREATE TABLE IF NOT EXISTS `Visit` (`id` INTEGER, `idProyecto` INTEGER NOT NULL, `idSalidaTerreno` INTEGER NOT NULL, `dirContacto` TEXT NOT NULL, `emailContacto` TEXT NOT NULL, `incluyeEvaluacion` INTEGER NOT NULL, `nombreBeneficiario` TEXT NOT NULL, `nombreProyecto` TEXT NOT NULL, `nombreInstrumento` TEXT NOT NULL, `telefonoContacto` TEXT NOT NULL, `guardado` INTEGER NOT NULL, PRIMARY KEY (`id`))');
+            'CREATE TABLE IF NOT EXISTS `Visit` (`id` INTEGER, `idProyecto` INTEGER NOT NULL, `idSalidaTerreno` INTEGER NOT NULL, `dirContacto` TEXT NOT NULL, `emailContacto` TEXT NOT NULL, `incluyeEvaluacion` INTEGER NOT NULL, `nombreBeneficiario` TEXT NOT NULL, `nombreProyecto` TEXT NOT NULL, `nombreInstrumento` TEXT NOT NULL, `telefonoContacto` TEXT NOT NULL, `latitud` REAL NOT NULL, `longitud` REAL NOT NULL, `guardado` INTEGER NOT NULL, PRIMARY KEY (`id`))');
         await database.execute(
             'CREATE TABLE IF NOT EXISTS `Attachment` (`id` INTEGER, `idVisita` INTEGER NOT NULL, `idEvaluation` INTEGER NOT NULL, `type` TEXT NOT NULL, `binaryFile` TEXT NOT NULL, PRIMARY KEY (`id`))');
 
@@ -448,6 +448,8 @@ class _$VisitDao extends VisitDao {
                   'nombreProyecto': item.nombreProyecto,
                   'nombreInstrumento': item.nombreInstrumento,
                   'telefonoContacto': item.telefonoContacto,
+                  'latitud': item.latitud,
+                  'longitud': item.longitud,
                   'guardado': item.guardado ? 1 : 0
                 }),
         _visitUpdateAdapter = UpdateAdapter(
@@ -465,6 +467,8 @@ class _$VisitDao extends VisitDao {
                   'nombreProyecto': item.nombreProyecto,
                   'nombreInstrumento': item.nombreInstrumento,
                   'telefonoContacto': item.telefonoContacto,
+                  'latitud': item.latitud,
+                  'longitud': item.longitud,
                   'guardado': item.guardado ? 1 : 0
                 }),
         _visitDeletionAdapter = DeletionAdapter(
@@ -482,6 +486,8 @@ class _$VisitDao extends VisitDao {
                   'nombreProyecto': item.nombreProyecto,
                   'nombreInstrumento': item.nombreInstrumento,
                   'telefonoContacto': item.telefonoContacto,
+                  'latitud': item.latitud,
+                  'longitud': item.longitud,
                   'guardado': item.guardado ? 1 : 0
                 });
 
@@ -511,6 +517,8 @@ class _$VisitDao extends VisitDao {
             nombreInstrumento: row['nombreInstrumento'] as String,
             nombreProyecto: row['nombreProyecto'] as String,
             telefonoContacto: row['telefonoContacto'] as String,
+            latitud: row['latitud'] as double,
+            longitud: row['longitud'] as double,
             guardado: (row['guardado'] as int) != 0));
   }
 
@@ -528,6 +536,8 @@ class _$VisitDao extends VisitDao {
             nombreInstrumento: row['nombreInstrumento'] as String,
             nombreProyecto: row['nombreProyecto'] as String,
             telefonoContacto: row['telefonoContacto'] as String,
+            latitud: row['latitud'] as double,
+            longitud: row['longitud'] as double,
             guardado: (row['guardado'] as int) != 0));
   }
 

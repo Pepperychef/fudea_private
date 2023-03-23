@@ -32,7 +32,7 @@ class Summary extends StatelessWidget {
     _providerSummary = Provider.of<ProviderSummary>(_context);
     _providerVisitas = Provider.of<ProviderVisitas>(_context);
 
-    return Scaffold(
+    return WillPopScope(child: Scaffold(
       body: Builder(
         builder: (context)=>SingleChildScrollView(
           child: ConstrainedBox(
@@ -213,9 +213,41 @@ class Summary extends StatelessWidget {
                                       child: GestureDetector(
                                         onTap: () async{
 
-                                          _providerVisitas.visits[visitPositon] = await _providerSummary.saveResponses(_providerEvaluacion.listResponses, visit);
+                                          if(!_providerEvaluacion.faltanDatos &&
+                                              _providerSummary.imgEvidenciaSaved &&
+                                              _providerSummary.imgActaSaved){
+                                            _providerVisitas.visits[visitPositon] = await _providerSummary.saveResponses(_providerEvaluacion.listResponses, visit);
+                                            _providerVisitas.notifyListeners();
+                                            Navigator.pop(context);
+
+                                          }else{
+                                            await showDialog(
+                                              context: context,
+                                              builder: (context) => AlertDialog(
+                                                title: const Text('Faltan datos para Guardar'),
+                                                content: Column(
+                                                  mainAxisSize: MainAxisSize.min,
+                                                  children: [
+                                                  _providerEvaluacion.faltanDatos?
+                                                  const Text('Debes completar la Evaluación'): Container(),
+                                                  !_providerSummary.imgEvidenciaSaved?
+                                                  const Text('Falta la imagen de Evidencia'): Container(),
+                                                  !_providerSummary.imgActaSaved?
+                                                  const Text('Falta la imagen del Acta'): Container()
+                                                ],),
+                                                actions: <Widget>[
+                                                  TextButton(
+                                                    onPressed: () => Navigator.of(context).pop(false),
+                                                    child: const Text('OK'),
+                                                  ),
+                                                ],
+                                              ),
+                                            );
+                                          }
+
+                                          /*_providerVisitas.visits[visitPositon] = await _providerSummary.saveResponses(_providerEvaluacion.listResponses, visit);
                                           _providerVisitas.notifyListeners();
-                                          Navigator.pop(context);
+                                          Navigator.pop(context);*/
                                         },
                                         child: Card(
                                           shape: RoundedRectangleBorder(
@@ -316,6 +348,6 @@ class Summary extends StatelessWidget {
           ),
         ),
       ),
-    );
+    ), onWillPop:() => _providerSummary.onWillPop(_context));
   }
 }

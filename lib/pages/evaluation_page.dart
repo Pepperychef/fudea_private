@@ -19,7 +19,7 @@ class EvaluationPage extends StatelessWidget{
     _provider = Provider.of<ProviderEvaluacion>(_context);
     _providerGrabador = Provider.of<ProviderGrabadorEncuesta>(_context);
 
-    return Scaffold(
+    return WillPopScope(child: Scaffold(
       body: Builder(
         builder: (context) => SingleChildScrollView(
           child: ConstrainedBox(
@@ -54,7 +54,8 @@ class EvaluationPage extends StatelessWidget{
                                 children: [
 
                                   IconButton(onPressed: (){
-                                    Navigator.pop(context);
+                                    _provider.onWillPop(context);
+                                    //Navigator.pop(context);
                                   },
                                       iconSize: (MediaQuery.of(context).size.height) /
                                           26.5,
@@ -142,7 +143,7 @@ class EvaluationPage extends StatelessWidget{
           ),
         ),
       ),
-    );
+    ), onWillPop:() => _provider.onWillPop(_context));
   }
 
 

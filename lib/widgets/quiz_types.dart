@@ -281,7 +281,7 @@ class QuizTypes extends StatelessWidget {
           );
         }
 
-        _provider.notifyListeners();
+        //_provider.notifyListeners();
       },
     );
   }

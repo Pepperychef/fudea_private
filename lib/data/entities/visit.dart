@@ -13,6 +13,8 @@ class Visit{
   String nombreProyecto;
   String nombreInstrumento;
   String telefonoContacto;
+  double latitud;
+  double longitud;
   bool guardado;
 
   Visit({
@@ -26,6 +28,8 @@ class Visit{
     required this.nombreInstrumento,
     required this.nombreProyecto,
     required this.telefonoContacto,
+    required this.latitud,
+    required this.longitud,
     required this.guardado
 });
 

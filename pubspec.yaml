@@ -53,6 +53,7 @@ dependencies:
   audioplayers: ^1.1.1
   permission_handler: ^10.2.0
   flutter_audio_recorder2: ^0.0.2
+  geolocator: ^9.0.2
 
 
 dev_dependencies:

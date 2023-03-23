@@ -12,6 +12,7 @@ import 'package:fudea/data/entities/option.dart';
 import 'package:fudea/data/entities/visit.dart';
 import 'package:fudea/utilities/constantes.dart';
 import 'package:fudea/utilities/future_daos.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
 
@@ -97,9 +98,18 @@ String getIdByDateTime() {
 }
 
 Future<String> codifyBinary(String _path) async {
-  List<int> fileBytes = File(_path).readAsBytesSync();
-  var file = base64Encode(fileBytes);
-  return file;
+  bool _exists = await File(_path).exists();
+  if(_exists){
+    List<int> fileBytes = File(_path).readAsBytesSync();
+    var file = base64Encode(fileBytes);
+    return file;
+  }else{
+    return _path;
+  }
+
+
+
+
 }
 
 String doubleToCurrency(double value, String currency) {
@@ -125,6 +135,36 @@ Future<List<Map<int,Option>>> fillOptions (List<Evaluation> preguntas, OptionDao
 
 
 }
+
+
+Future<bool> handleLocationPermission(BuildContext context) async {
+  bool serviceEnabled;
+  LocationPermission permission;
+
+  serviceEnabled = await Geolocator.isLocationServiceEnabled();
+  if (!serviceEnabled) {
+    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text('El servicio de GPS esta desactivado. Debe habilitar para continuar')));
+    return false;
+  }
+  permission = await Geolocator.checkPermission();
+  if (permission == LocationPermission.denied) {
+    permission = await Geolocator.requestPermission();
+    if (permission == LocationPermission.denied) {
+      ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Permisos de ubicación fueron denegados')));
+      return false;
+    }
+  }
+  if (permission == LocationPermission.deniedForever) {
+    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text('Permisos de ubicación estan permanentemente denegados, No se puede solicitar permiso.')));
+    return false;
+  }
+  return true;
+}
+
+
 
 Future<void> saveAttachemnts({required Attachment data, required bool finalSave, required int idEvaluation, required String type})async{
 
@@ -160,12 +200,16 @@ Future<List<Visit>> fetchSavedVisits() async{
 
 
 
-Future<List<Visit>> saveData({required Map<String, dynamic> list}) async {
+Future<List<Visit>> saveData({required Map<String, dynamic> list, required BuildContext context}) async {
   List list1 = list['VISITAS'];
+
+  VisitDao visitDao = await FutureDaos().visitDaoFuture();
+
+  Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.low);
 
   EvaluationDao evaluationDao = await FutureDaos().evaluationDaoFuture();
   OptionDao optionDao = await FutureDaos().optionDaoFuture();
-  VisitDao visitDao = await FutureDaos().visitDaoFuture();
+
 
   Evaluation ?tmp = await evaluationDao.encuentraPrimeraAplicacion();
 
@@ -181,6 +225,8 @@ Future<List<Visit>> saveData({required Map<String, dynamic> list}) async {
         nombreInstrumento: map1['nombre instrumento'].toString(),
         nombreProyecto: map1['nombre proyecto'].toString(),
         telefonoContacto: map1['teléfono contacto'].toString(),
+        longitud: position.longitude,
+        latitud: position.latitude,
         guardado: false,
       );
 
@@ -217,7 +263,27 @@ Future<List<Visit>> saveData({required Map<String, dynamic> list}) async {
 
 
 
-Future<void> sendFilesToServer ({required List<Visit> visitas, required int idUsuario})async{
+Future<void> sendFilesToServer ({required List<Visit> visitas, required int idUsuario, required BuildContext context})async{
+
+  showDialog(
+    context: context,
+    barrierDismissible: false,
+    builder: (context) => AlertDialog(
+      content:
+      Column(
+        mainAxisSize: MainAxisSize.min,
+        children: const [
+          // The loading indicator
+          CircularProgressIndicator(),
+          SizedBox(
+            height: 15,
+          ),
+          // Some text
+          Text('Cargando...')
+        ],
+      ),
+    ),
+  );
 
   AttachmentDao _attachmentDao = await FutureDaos().attachmentDaoFuture();
   ResponseDao _responseDao = await FutureDaos().responseDaoFuture();
@@ -256,14 +322,14 @@ Future<void> sendFilesToServer ({required List<Visit> visitas, required int idUs
 
     Map visitData = {
       "id_visita": visit.idProyecto.toString(),
-      "img_acta": imgActa,
-      "img_evidencia": imgEvidencia,
-      "arch_audio": arch_audio,
+      "img_acta": imgActa.toString(),
+      "img_evidencia": imgEvidencia.toString(),
+      "arch_audio": arch_audio.toString(),
       "posicion":{
-        "latitud": '0',
-        "Longitud": '0',
+        "latitud": visit.latitud.toString(),
+        "Longitud": visit.longitud.toString(),
       } ,
-      "evaluacion": respuestas.toString(),
+      "evaluacion": respuestas,
 
     };
     visitas2.add(visitData);
@@ -271,18 +337,24 @@ Future<void> sendFilesToServer ({required List<Visit> visitas, required int idUs
   }
 
   Map data = {
-    'idUsuario': idUsuario.toString(),
-    'visitas': visitas2.toString()
+    'idUsuario': idUsuario,
+    'visitas': visitas2
   };
 
   Constantes constantes = Constantes();
 
-  var response = await http.post(Uri.parse('${constantes.url}upload'), body: data);
+  var response = await http.post(Uri.parse('${constantes.url}upload'), body: data.toString());
 
   if(response.statusCode != 400){
     AppDatabase _db = await constantes.databaseFuture();
     await _db.clearAllTables();
+    Navigator.of(context).pop();
   }
+
+  await Future.delayed(const Duration(seconds: 2));
+
+  Navigator.of(context).pop();
+
 
 
 }
