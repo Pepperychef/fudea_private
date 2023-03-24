@@ -4,6 +4,7 @@ import 'dart:async';
 
 import 'package:file/file.dart';
 import 'package:file/local.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_audio_recorder2/flutter_audio_recorder2.dart';
 import 'package:fudea/data/daos/attachment_dao.dart';
@@ -12,8 +13,10 @@ import 'package:fudea/data/entities/visit.dart';
 import 'package:fudea/utilities/future_daos.dart';
 import 'package:fudea/utilities/tools.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:audioplayers/audioplayers.dart';
+import '../widgets_encuesta_formulario/grabador.dart' as grabador;
 
-class ProviderGrabadorEncuesta with ChangeNotifier{
+class ProviderGrabadorResumen with ChangeNotifier{
 
   FlutterAudioRecorder2 recording;
   bool isRecording = false;
@@ -25,7 +28,7 @@ class ProviderGrabadorEncuesta with ChangeNotifier{
 
   String valueRespuesta = '';
 
-  ProviderGrabadorEncuesta({
+  ProviderGrabadorResumen({
     required this.recording,
     required this.visit,
     required this.idEvaluation,
@@ -42,7 +45,7 @@ class ProviderGrabadorEncuesta with ChangeNotifier{
     if (localFilePath != '') {
       Attachment _tmp = Attachment(
           idVisita: visit.idProyecto,
-          type: 'arch_audio',
+          type: 'arch_audio_summary',
           binaryFile: localFilePath,
           idEvaluation: idEvaluation);
       await saveAttachemnts(data: _tmp, finalSave: false, idEvaluation: idEvaluation, type: 'arch_audio');

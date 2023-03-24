@@ -5,6 +5,7 @@ import 'package:flutter_audio_recorder2/flutter_audio_recorder2.dart';
 import 'package:fudea/data/entities/visit.dart';
 import 'package:fudea/pages/evaluation_page.dart';
 import 'package:fudea/providers/provider_grabador_encuesta.dart';
+import 'package:fudea/providers/provider_grabador_resumen.dart';
 import 'package:fudea/providers/provider_summary.dart';
 import 'package:fudea/providers/provider_visitas.dart';
 import 'package:path_provider/path_provider.dart';
@@ -12,6 +13,7 @@ import 'package:provider/provider.dart';
 
 import '../providers/provider_evaluacion.dart';
 import '../utilities/tools.dart';
+import '../widgets_encuesta_formulario/respuesta_audio.dart';
 
 class Summary extends StatelessWidget {
 
@@ -22,6 +24,7 @@ class Summary extends StatelessWidget {
   late ProviderEvaluacion _providerEvaluacion;
   late ProviderSummary _providerSummary;
   late ProviderVisitas _providerVisitas;
+  late ProviderGrabadorResumen _providerGrabador;
 
   Summary({Key? key, required this.localId, required this.visit, required this.visitPositon}) : super(key: key);
 
@@ -31,6 +34,7 @@ class Summary extends StatelessWidget {
     _providerEvaluacion = Provider.of<ProviderEvaluacion>(_context);
     _providerSummary = Provider.of<ProviderSummary>(_context);
     _providerVisitas = Provider.of<ProviderVisitas>(_context);
+    _providerGrabador = Provider.of<ProviderGrabadorResumen>(_context);
 
     return WillPopScope(child: Scaffold(
       body: Builder(
@@ -59,12 +63,49 @@ class Summary extends StatelessWidget {
                     SizedBox(
                       width: MediaQuery.of(context).size.width,
                       height: MediaQuery.of(context).size.height / 5,
-                      child: Image.asset(
-                        'assets/img/curva_colores.png',
+                      child: Stack(children: [
+                        Image.asset(
+                          'assets/img/curva_colores.png',
 
-                        fit: BoxFit.cover,
-                        //height: 120.0,
-                      ),
+                          fit: BoxFit.cover,
+                          //height: 120.0,
+                        ),
+                        Positioned.fill(
+                          child: Align(
+                            alignment: Alignment.centerRight,
+                            child: Container(
+                              alignment: Alignment.centerRight,
+                              child:  RespuestaAudio(
+                                iconSize: MediaQuery.of(context).size.height / 20,
+                                completada: false,
+                                onPressedGuardar: () => _providerGrabador.saveRecording(),
+                                onPressedStart: () {
+                                  _providerGrabador.startRecording(context);
+                                },
+                                enabled: true,
+                                onPressedBorrar: () => _providerGrabador.deleteRecording(),
+                                isRecording: _providerGrabador.isRecording,
+                              ),
+
+                              height: MediaQuery.of(context).size.height / 15,
+                              width: MediaQuery.of(context).size.width / 2.8,
+                              decoration:  BoxDecoration(
+                                  borderRadius: BorderRadius.only(
+                                      topLeft: Radius.circular((MediaQuery.of(context).size.height) / 46.5),
+                                      bottomLeft: Radius.circular((MediaQuery.of(context).size.height) / 46.5)),
+                                  gradient: const LinearGradient(
+                                    begin: Alignment.topCenter,
+                                    end: Alignment.bottomCenter,
+                                    colors: <Color>[
+                                      Color.fromRGBO(225, 191, 0, 1),
+                                      Color.fromRGBO(240, 125, 0, 1)
+                                    ],
+                                  )),
+                            ),
+                          ),
+                        )
+
+                      ],),
                     ),
 
                     Expanded(
@@ -319,7 +360,7 @@ class Summary extends StatelessWidget {
                       child: Column(
                         children: [
                           Text(
-                            'NOMBRE BENEFICIARIO',
+                            visit.nombreBeneficiario,
                             textAlign: TextAlign.center,
                             style: TextStyle(
                                 color: Colors.white,
@@ -328,7 +369,7 @@ class Summary extends StatelessWidget {
                                     56.5),
                           ),
                           Text(
-                            'RESUMEN INFORMACION',
+                            'Telf: ${visit.telefonoContacto}',
                             textAlign: TextAlign.center,
                             style: TextStyle(
                                 color: Colors.white,
@@ -339,8 +380,10 @@ class Summary extends StatelessWidget {
                         ],
                       ),
                     ),
+
                   ],
                 ),
+
               ],
 
             ),

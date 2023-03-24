@@ -1,15 +1,18 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_audio_recorder2/flutter_audio_recorder2.dart';
 import 'package:fudea/data/entities/evaluation.dart';
 import 'package:fudea/data/entities/option.dart';
 import 'package:fudea/data/entities/response.dart';
 import 'package:fudea/data/entities/visit.dart';
 import 'package:fudea/pages/summary.dart';
 import 'package:fudea/providers/provider_evaluacion.dart';
+import 'package:fudea/providers/provider_grabador_resumen.dart';
 import 'package:fudea/providers/provider_summary.dart';
 import 'package:fudea/providers/provider_visitas.dart';
 import 'package:fudea/utilities/tools.dart';
 import 'package:intl/intl.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 
 import '../data/daos/evaluation_dao.dart';
@@ -148,31 +151,44 @@ class DailyVisits extends StatelessWidget {
                                   await fillOptions(
                                       listEvaluation, optionDao);
 
+                                  final directory = await getApplicationDocumentsDirectory();
+                                  String _extraId = getIdByDateTime();
+                                  String path = '${directory.path}/respuestaresumen${_providerVisitas.visits[index].idProyecto}$_extraId.m4a';
+
                                   List<List<Response>> listResponses =
                                   List.generate(
                                       listEvaluation.length, (index) => []);
                                   Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                          builder: (context) => MultiProvider(
-                                              child: Summary(
-                                                localId: _providerVisitas.visits[index].idProyecto,
-                                                visit: _providerVisitas.visits[index],
-                                                visitPositon: index,
-                                              ),
-                                              providers: [
-                                                ChangeNotifierProvider.value(value: _providerVisitas),
-                                                ChangeNotifierProvider.value(
-                                                    value: ProviderSummary()),
-                                                ChangeNotifierProvider.value(
-                                                    value: ProviderEvaluacion(
-                                                        listEvaluation:
-                                                        listEvaluation,
-                                                        listOptions:
-                                                        listOptions,
-                                                        listResponses:
-                                                        listResponses))
-                                              ])));
+                                          builder: (context) {
+
+                                            return MultiProvider(
+                                            child: Summary(
+                                            localId: _providerVisitas.visits[index].idProyecto,
+                                            visit: _providerVisitas.visits[index],
+                                            visitPositon: index,
+                                            ),
+                                            providers: [
+                                            ChangeNotifierProvider.value(value: ProviderGrabadorResumen(
+                                            idEvaluation: _providerVisitas.visits[index].idProyecto,
+                                            visit: _providerVisitas.visits[index],
+                                            recording: FlutterAudioRecorder2(path),
+                                            localFilePath: path)),
+                                            ChangeNotifierProvider.value(value: _providerVisitas),
+                                            ChangeNotifierProvider.value(
+                                            value: ProviderSummary()),
+                                            ChangeNotifierProvider.value(
+                                            value: ProviderEvaluacion(
+    listEvaluation:
+    listEvaluation,
+    listOptions:
+    listOptions,
+    listResponses:
+    listResponses))
+    ]);
+
+                                          } ));
 
                                 }
 

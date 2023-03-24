@@ -306,6 +306,7 @@ Future<void> sendFilesToServer ({required List<Visit> visitas, required int idUs
     String imgActa= '';
     String imgEvidencia = '';
     String arch_audio = '';
+    String arch_audio_resumen = '';
 
     for(Attachment att in attachments){
 
@@ -314,17 +315,27 @@ Future<void> sendFilesToServer ({required List<Visit> visitas, required int idUs
       case2(att.type, {
         'img_acta': imgActa = binary,
         'img_evidencia': imgEvidencia = binary,
-        'arch_audio': arch_audio = arch_audio
+        'arch_audio': arch_audio = binary,
+        'arch_audio_summary' : arch_audio_resumen = binary
       }
       );
 
+    }
+
+    List<String> grabaciones = [];
+
+    if(arch_audio!=''){
+      grabaciones.add(arch_audio);
+    }
+    if(arch_audio_resumen!=''){
+      grabaciones.add(arch_audio_resumen);
     }
 
     Map visitData = {
       "id_visita": visit.idProyecto.toString(),
       "img_acta": imgActa.toString(),
       "img_evidencia": imgEvidencia.toString(),
-      "arch_audio": arch_audio.toString(),
+      "arch_audio": grabaciones,
       "posicion":{
         "latitud": visit.latitud.toString(),
         "Longitud": visit.longitud.toString(),
@@ -335,11 +346,6 @@ Future<void> sendFilesToServer ({required List<Visit> visitas, required int idUs
     visitas2.add(visitData);
 
   }
-
-  Map data = {
-    'idUsuario': idUsuario,
-    'visitas': visitas2
-  };
 
   Constantes constantes = Constantes();
 
