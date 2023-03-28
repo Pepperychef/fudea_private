@@ -99,17 +99,13 @@ String getIdByDateTime() {
 
 Future<String> codifyBinary(String _path) async {
   bool _exists = await File(_path).exists();
-  if(_exists){
+  if (_exists) {
     List<int> fileBytes = File(_path).readAsBytesSync();
     var file = base64Encode(fileBytes);
     return file;
-  }else{
+  } else {
     return _path;
   }
-
-
-
-
 }
 
 String doubleToCurrency(double value, String currency) {
@@ -119,23 +115,20 @@ String doubleToCurrency(double value, String currency) {
   return result;
 }
 
-Future<List<Map<int,Option>>> fillOptions (List<Evaluation> preguntas, OptionDao optionDao) async{
-
-  List<Map<int,Option>> options= [];
+Future<List<Map<int, Option>>> fillOptions(
+    List<Evaluation> preguntas, OptionDao optionDao) async {
+  List<Map<int, Option>> options = [];
 
   for (Evaluation pregunta in preguntas) {
-    List<Option> _tmp = await optionDao.findOptionsByEvaluationId(pregunta.idPregunta);
-    Map<int,Option> _tmp2= {for (var item in _tmp) item.idOption : item};
+    List<Option> _tmp =
+        await optionDao.findOptionsByEvaluationId(pregunta.idPregunta);
+    Map<int, Option> _tmp2 = {for (var item in _tmp) item.idOption: item};
 
     options.add(_tmp2);
   }
 
-
   return options;
-
-
 }
-
 
 Future<bool> handleLocationPermission(BuildContext context) async {
   bool serviceEnabled;
@@ -144,78 +137,88 @@ Future<bool> handleLocationPermission(BuildContext context) async {
   serviceEnabled = await Geolocator.isLocationServiceEnabled();
   if (!serviceEnabled) {
     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        content: Text('El servicio de GPS esta desactivado. Debe habilitar para continuar')));
+        content: Text(
+            'El servicio de GPS esta desactivado. Debe habilitar para continuar')));
     return false;
   }
   permission = await Geolocator.checkPermission();
   if (permission == LocationPermission.denied) {
     permission = await Geolocator.requestPermission();
     if (permission == LocationPermission.denied) {
-      ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Permisos de ubicación fueron denegados')));
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text('Permisos de ubicación fueron denegados')));
       return false;
     }
   }
   if (permission == LocationPermission.deniedForever) {
     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        content: Text('Permisos de ubicación estan permanentemente denegados, No se puede solicitar permiso.')));
+        content: Text(
+            'Permisos de ubicación estan permanentemente denegados, No se puede solicitar permiso.')));
     return false;
   }
   return true;
 }
 
-
-
-Future<void> saveAttachemnts({required Attachment data, required bool finalSave, required int idEvaluation, required String type})async{
-
+Future<void> saveAttachemnts(
+    {required Attachment data,
+    required bool finalSave,
+    required int idEvaluation,
+    required String type}) async {
   String _path = data.binaryFile;
   AttachmentDao _dao = await FutureDaos().attachmentDaoFuture();
 
-  Attachment? _tmp = await _dao.findAttachmentsByEvaluationIdAndType(data.idVisita, idEvaluation, type);
+  Attachment? _tmp = await _dao.findAttachmentsByEvaluationIdAndType(
+      data.idVisita, idEvaluation, type);
 
-  if(finalSave){
+  if (finalSave) {
     String _tmpbi = await codifyBinary(_path);
-    data = Attachment(id: data.id, idVisita: data.idVisita, type: data.type, binaryFile: _tmpbi, idEvaluation: idEvaluation);
+    data = Attachment(
+        id: data.id,
+        idVisita: data.idVisita,
+        type: data.type,
+        binaryFile: _tmpbi,
+        idEvaluation: idEvaluation);
     _dao.updateSingle(data);
-  }else{
-    if(_tmp != null){
-      data = Attachment(id: _tmp.id, idVisita: data.idVisita, type: data.type, binaryFile: data.binaryFile, idEvaluation: idEvaluation);
+  } else {
+    if (_tmp != null) {
+      data = Attachment(
+          id: _tmp.id,
+          idVisita: data.idVisita,
+          type: data.type,
+          binaryFile: data.binaryFile,
+          idEvaluation: idEvaluation);
       _dao.updateSingle(data);
-    }else{
+    } else {
       _dao.insertSingle(data);
     }
   }
-
 }
 
-Future<List<Visit>> fetchSavedVisits() async{
+Future<List<Visit>> fetchSavedVisits() async {
   VisitDao visitDao = await FutureDaos().visitDaoFuture();
 
   List<Visit> visitasGuardadas = await visitDao.findSaved();
 
   return visitasGuardadas;
-
-
 }
 
-
-
-Future<List<Visit>> saveData({required Map<String, dynamic> list, required BuildContext context}) async {
+Future<List<Visit>> saveData(
+    {required Map<String, dynamic> list, required BuildContext context}) async {
   List list1 = list['VISITAS'];
 
   VisitDao visitDao = await FutureDaos().visitDaoFuture();
 
-  Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.low);
+  Position position = await Geolocator.getCurrentPosition(
+      desiredAccuracy: LocationAccuracy.low);
 
   EvaluationDao evaluationDao = await FutureDaos().evaluationDaoFuture();
   OptionDao optionDao = await FutureDaos().optionDaoFuture();
 
+  Evaluation? tmp = await evaluationDao.encuentraPrimeraAplicacion();
 
-  Evaluation ?tmp = await evaluationDao.encuentraPrimeraAplicacion();
-
-  if(tmp == null){
+  if (tmp == null) {
     for (Map map1 in list1) {
-      Visit visit =  Visit(
+      Visit visit = Visit(
         idProyecto: map1['ID proyecto'],
         idSalidaTerreno: map1['ID salida terreno'],
         dirContacto: map1['dirección contacto'].toString(),
@@ -247,30 +250,26 @@ Future<List<Visit>> saveData({required Map<String, dynamic> list, required Build
               strOption: list2[1]);
 
           await optionDao.insertSingle(option);
-
         }
         await evaluationDao.insertSingle(eval);
       }
       await visitDao.insertSingle(visit);
-
     }
   }
 
   List<Visit> listResponse = await visitDao.findEverything();
   return listResponse;
-
 }
 
-
-
-Future<void> sendFilesToServer ({required List<Visit> visitas, required int idUsuario, required BuildContext context})async{
-
+Future<void> sendFilesToServer(
+    {required List<Visit> visitas,
+    required int idUsuario,
+    required BuildContext context}) async {
   showDialog(
     context: context,
     barrierDismissible: false,
     builder: (context) => AlertDialog(
-      content:
-      Column(
+      content: Column(
         mainAxisSize: MainAxisSize.min,
         children: const [
           // The loading indicator
@@ -287,47 +286,53 @@ Future<void> sendFilesToServer ({required List<Visit> visitas, required int idUs
 
   AttachmentDao _attachmentDao = await FutureDaos().attachmentDaoFuture();
   ResponseDao _responseDao = await FutureDaos().responseDaoFuture();
+  EvaluationDao _evaluationDao = await FutureDaos().evaluationDaoFuture();
 
-  List visitas2=[];
-  for (Visit visit in visitas){
+  List visitas2 = [];
+  for (Visit visit in visitas) {
+    List respuestas = [];
 
-    List<Response> _tmp = await _responseDao.findResponsesByVisitId(visit.idProyecto);
-    List respuestas= [];
-    for(Response response in _tmp){
+    List<Evaluation> _listPreguntas =
+        await _evaluationDao.findEvaluationsByVisitId(visit.idProyecto);
+
+    for (Evaluation evaluation in _listPreguntas) {
+      List<Response> _tmp =
+          await _responseDao.findResponsesByEvaluationId(evaluation.idPregunta);
+
       Map respData = {
-        "id_pregunta": response.idEvaluation.toString(),
-        "id_respuesta": response.idOption.toString(),
-        "texto_respuesta": response.strOption.toString(),
+        "id_pregunta": _tmp.first.idEvaluation.toString(),
+        "id_respuesta": List.generate(
+            _tmp.length, (index) => _tmp[index].idOption.toString()),
+        "texto_respuesta": _tmp.first.strOption,
       };
       respuestas.add(respData);
     }
-    List<Attachment> attachments = await _attachmentDao.findAttachmentsByVisitId(visit.idProyecto);
 
-    String imgActa= '';
+    List<Attachment> attachments =
+        await _attachmentDao.findAttachmentsByVisitId(visit.idProyecto);
+
+    String imgActa = '';
     String imgEvidencia = '';
     String arch_audio = '';
     String arch_audio_resumen = '';
 
-    for(Attachment att in attachments){
-
+    for (Attachment att in attachments) {
       String binary = await codifyBinary(att.binaryFile);
 
       case2(att.type, {
         'img_acta': imgActa = binary,
         'img_evidencia': imgEvidencia = binary,
         'arch_audio': arch_audio = binary,
-        'arch_audio_summary' : arch_audio_resumen = binary
-      }
-      );
-
+        'arch_audio_summary': arch_audio_resumen = binary
+      });
     }
 
     List<String> grabaciones = [];
 
-    if(arch_audio!=''){
+    if (arch_audio != '') {
       grabaciones.add(arch_audio);
     }
-    if(arch_audio_resumen!=''){
+    if (arch_audio_resumen != '') {
       grabaciones.add(arch_audio_resumen);
     }
 
@@ -336,38 +341,29 @@ Future<void> sendFilesToServer ({required List<Visit> visitas, required int idUs
       "img_acta": imgActa.toString(),
       "img_evidencia": imgEvidencia.toString(),
       "arch_audio": grabaciones,
-      "posicion":{
+      "posicion": {
         "latitud": visit.latitud.toString(),
         "Longitud": visit.longitud.toString(),
-      } ,
+      },
       "evaluacion": respuestas,
-
     };
     visitas2.add(visitData);
-
   }
 
   Constantes constantes = Constantes();
 
   var response = await http.post(Uri.parse('${constantes.url}upload'),
-      body: jsonEncode(<String, dynamic>{
-        'idUsuario': idUsuario,
-        'visitas': visitas2
-      }));
+      body: jsonEncode(
+          <String, dynamic>{'idUsuario': idUsuario, 'visitas': visitas2}));
 
   await Future.delayed(const Duration(seconds: 2));
 
-  if(response.statusCode != 400){
+  if (response.statusCode != 400) {
     AppDatabase _db = await constantes.databaseFuture();
     await _db.clearAllTables();
 
     Navigator.of(context).pop();
   }
 
-
-
   Navigator.of(context).pop();
-
-
-
 }
