@@ -401,7 +401,7 @@ class _$ResponseDao extends ResponseDao {
   @override
   Future<List<Response>> findResponsesByEvaluationId(int idPregunta) async {
     return _queryAdapter.queryList(
-        'SELECT * FROM Response WHERE idPregunta = ?1',
+        'SELECT * FROM Response WHERE idEvaluation = ?1',
         mapper: (Map<String, Object?> row) => Response(
             id: row['id'] as int?,
             strOption: row['strOption'] as String,

@@ -70,7 +70,7 @@ class Summary extends StatelessWidget {
                           fit: BoxFit.cover,
                           //height: 120.0,
                         ),
-                        Positioned.fill(
+                       /* Positioned.fill(
                           child: Align(
                             alignment: Alignment.centerRight,
                             child: Container(
@@ -103,7 +103,7 @@ class Summary extends StatelessWidget {
                                   )),
                             ),
                           ),
-                        )
+                        )*/
 
                       ],),
                     ),
@@ -321,6 +321,42 @@ class Summary extends StatelessWidget {
                         )),
                   ],
                 ),
+                Align(child: Container(
+                  margin: EdgeInsets.only(top: (MediaQuery.of(context).size.height) / 4.2,),
+                    height: (MediaQuery.of(context).size.height) / 7.5,
+                    width: (MediaQuery.of(context).size.height) / 7.5,
+                    //square box; equal height and width so that it won't look like oval
+                    child:
+
+                    Card(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(80),
+                        //set border radius more than 50% of height and width to make circle
+                      ),
+                      child: Container(
+                        decoration: const BoxDecoration(
+                            shape: BoxShape.circle,
+                            gradient: LinearGradient(
+                              begin: Alignment.centerLeft,
+                              end: Alignment.centerRight,
+                              colors: <Color>[
+                                Color.fromRGBO(0, 95, 146, 1),
+                                Color.fromRGBO(28, 59, 112, 1),
+                              ],
+                            )),
+                        child:  RespuestaAudio(
+                          iconSize: MediaQuery.of(context).size.height / 18,
+                          completada: false,
+                          onPressedGuardar: () => _providerGrabador.saveRecording(),
+                          onPressedStart: () {
+                            _providerGrabador.startRecording(context);
+                          },
+                          enabled: true,
+                          onPressedBorrar: () => _providerGrabador.deleteRecording(),
+                          isRecording: _providerGrabador.isRecording,
+                        ),
+                      ),
+                    )),),
                 Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [

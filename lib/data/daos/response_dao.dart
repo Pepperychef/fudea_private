@@ -8,7 +8,7 @@ abstract class ResponseDao{
   @Query('SELECT * FROM Response WHERE idProyecto = :idProyecto')
   Future<List<Response>> findResponsesByVisitId(int idProyecto);
 
-  @Query('SELECT * FROM Response WHERE idPregunta = :idPregunta')
+  @Query('SELECT * FROM Response WHERE idEvaluation = :idPregunta')
   Future<List<Response>> findResponsesByEvaluationId(int idPregunta);
 
 
