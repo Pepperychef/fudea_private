@@ -5,6 +5,7 @@ import 'package:fudea/widgets/quiz_types.dart';
 import 'package:provider/provider.dart';
 
 import '../data/entities/evaluation.dart';
+import '../data/entities/response.dart';
 import '../providers/provider_evaluacion.dart';
 import '../widgets_encuesta_formulario/respuesta_audio.dart';
 
@@ -114,6 +115,8 @@ class EvaluationPage extends StatelessWidget{
                             shrinkWrap: true,
                             children: List.generate(_provider.listEvaluation.length, (index){
 
+                              List<Response> _response = _provider.listResponses[index];
+
                               return MultiProvider(
                                   child: QuizTypes(
                                       idProyecto: _provider.listEvaluation[index].idProyecto,
@@ -123,7 +126,8 @@ class EvaluationPage extends StatelessWidget{
                                       index: index,
                                       validationRequired: false,
                                       validationMaxDate: '',
-                                      validationMinDate: ''
+                                      validationMinDate: '',
+                                    idEvaluation: _provider.listEvaluation[index].idPregunta,
                                   ),
                                   providers:[
                                     ChangeNotifierProvider.value(value: _provider)

@@ -23,6 +23,7 @@ class QuizTypes extends StatelessWidget {
   String validationMinDate;
   String validationMaxDate;
   int idProyecto;
+  int idEvaluation;
 
   late ProviderEvaluacion _provider;
 
@@ -34,7 +35,8 @@ class QuizTypes extends StatelessWidget {
       required this.validationRequired,
       required this.validationMaxDate,
         required this.idProyecto,
-      required this.validationMinDate});
+
+      required this.validationMinDate, this.idEvaluation = 0});
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +50,7 @@ class QuizTypes extends StatelessWidget {
       case 'texto':
         return prepareTextBox(context, idProyecto);
       case 'bool':
-        return prepareBoolChoice(context, idProyecto);
+        return prepareBoolChoice(context, idProyecto, idEvaluation);
       case 'nota':
         return prepareScore(context, idProyecto);
       default:
@@ -67,7 +69,15 @@ class QuizTypes extends StatelessWidget {
         opcionesActivas: _provider.listResponses[index],
         permiteComentario: permiteComentario,
         tituloComentario: tituloComentario,
-        opciones: List.generate(_listOptions.length, (index) {
+        opciones: List.generate(_listOptions.length, (_index) {
+
+          bool existe = false;
+
+          for (Response _resp in _response) {
+            if (_resp.idOption == _listOptions[_index].idOption) {
+              existe = true;
+            }
+          }
           return Container(
             width: MediaQuery.of(context).size.width,
             child: Card(
@@ -76,7 +86,7 @@ class QuizTypes extends StatelessWidget {
                   borderRadius: BorderRadius.circular(0)),
               child: InkWell(
                 onTap: () {
-                  if (_response.isNotEmpty) {
+                  /*if (_response.isNotEmpty) {
                     _provider.listResponses[index] = [];
                     _provider.listResponses[index] = [
                       Response(
@@ -95,6 +105,20 @@ class QuizTypes extends StatelessWidget {
                     ]);
                   }
 
+                  _provider.notifyListeners();*/
+
+                  Response _responseTemp = Response(
+                      idProyecto: idProyecto,
+                      strOption: '',
+                      idOption: _listOptions[_index].idOption,
+                      idEvaluation: _listOptions[_index].idEvaluation);
+
+
+
+                  _response = [_responseTemp];
+
+                  _provider.listResponses[index] = _response;
+
                   _provider.notifyListeners();
                 },
                 child: Container(
@@ -108,8 +132,7 @@ class QuizTypes extends StatelessWidget {
                           child: Container(
                             margin: const EdgeInsets.only(right: 10),
                             child: GradientIcon(
-                              icon: _response[0].idOption ==
-                                      _listOptions[index].idOption
+                              icon: existe
                                   ? CupertinoIcons.circle_filled
                                   : CupertinoIcons.circle,
                               size: (MediaQuery.of(context).size.height) / 40,
@@ -130,7 +153,7 @@ class QuizTypes extends StatelessWidget {
                         child: Align(
                           alignment: Alignment.centerLeft,
                           child: Text(
-                            _listOptions[index].strOption,
+                            _listOptions[_index].strOption,
                             style: TextStyle(
                                 fontSize:
                                     (MediaQuery.of(context).size.height) / 60),
@@ -286,15 +309,25 @@ class QuizTypes extends StatelessWidget {
     );
   }
 
-  Widget prepareBoolChoice(BuildContext context, int idProyecto) {
-    List<Option> _listOptions = _provider.listOptions[index].values.toList();
+  Widget prepareBoolChoice(BuildContext context, int idProyecto, int idEvaluation) {
     List<Response> _response = _provider.listResponses[index];
+
+
     return RespuestaSeleccionBinaria(
         completada: false,
-        opcionesActivas: [],
+        opcionesActivas: _provider.listResponses[index],
         permiteComentario: permiteComentario,
         tituloComentario: tituloComentario,
-        opciones: List.generate(2, (index) {
+        opciones: List.generate(2, (_index) {
+
+          bool existe = false;
+
+          for (Response _resp in _response) {
+            if (_resp.idOption == _index) {
+              existe = true;
+            }
+          }
+
           return Container(
             width: MediaQuery.of(context).size.width / 2,
             child: Card(
@@ -303,25 +336,16 @@ class QuizTypes extends StatelessWidget {
                   borderRadius: BorderRadius.circular(0)),
               child: InkWell(
                 onTap: () {
-                  if (_response.isNotEmpty) {
-                    _provider.listResponses = [];
+                  Response _responseTemp = Response(
+                      idProyecto: idProyecto,
+                      strOption: '',
+                      idOption: _index,
+                      idEvaluation: idEvaluation);
 
-                    _provider.listResponses.add([
-                      Response(
-                          idProyecto: idProyecto,
-                          strOption: '',
-                          idOption: _listOptions[index].idOption,
-                          idEvaluation: _listOptions[index].idEvaluation)
-                    ]);
-                  } else {
-                    _provider.listResponses.add([
-                      Response(
-                          idProyecto: idProyecto,
-                          strOption: '',
-                          idOption: _listOptions[index].idOption,
-                          idEvaluation: _listOptions[index].idEvaluation)
-                    ]);
-                  }
+                  _response = [_responseTemp];
+
+                  _provider.listResponses[index] = _response;
+
                   _provider.notifyListeners();
                 },
                 child: Container(
@@ -333,7 +357,7 @@ class QuizTypes extends StatelessWidget {
                         child: Align(
                           alignment: Alignment.centerRight,
                           child: Text(
-                            _listOptions[index].strOption,
+                            _index.isEven? 'No': 'Si',
                             style: TextStyle(
                                 fontSize:
                                     (MediaQuery.of(context).size.height) / 60),
@@ -347,8 +371,7 @@ class QuizTypes extends StatelessWidget {
                           child: Container(
                             margin: EdgeInsets.only(right: 10),
                             child: GradientIcon(
-                              icon: _response[0].idOption ==
-                                      _listOptions[index].idOption
+                              icon: existe
                                   ? CupertinoIcons.circle_filled
                                   : CupertinoIcons.circle,
                               size: (MediaQuery.of(context).size.height) / 40,
@@ -374,26 +397,23 @@ class QuizTypes extends StatelessWidget {
   }
 
   Widget prepareScore(BuildContext context, idProyecto) {
-    List<Option> _listOptions = _provider.listOptions[index].values.toList();
     List<Response> _response = _provider.listResponses[index];
 
-    int _selected = -1;
-
-    int _count = 0;
-
-    for (Response _resp in _response) {
-      if (_resp.idOption == _listOptions[index].idOption) {
-        _selected = _count;
-      }
-      _count++;
-    }
 
     return RespuestaNota(
         completada: false,
-        opcionesActivas: [],
+        opcionesActivas: _provider.listResponses[index],
         permiteComentario: permiteComentario,
         tituloComentario: tituloComentario,
-        opciones: List.generate(5, (index) {
+        opciones: List.generate(5, (_index) {
+          bool existe = false;
+
+          for (Response _resp in _response) {
+            if (_resp.idOption >= _index) {
+              existe = true;
+            }
+          }
+
           return Container(
             //margin: EdgeInsets.only(right: 20, left: 20),
             width: MediaQuery.of(context).size.width / 10,
@@ -404,32 +424,26 @@ class QuizTypes extends StatelessWidget {
               child: InkWell(
                 onTap: () {
 
-                  if (_response.isNotEmpty) {
-                    _provider.listResponses = [];
+                  Response _responseTemp = Response(
+                      idProyecto: idProyecto,
+                      strOption: '',
+                      idOption: _index,
+                      idEvaluation: idEvaluation);
 
-                    _provider.listResponses.add([
-                      Response(
-                          idProyecto: idProyecto,
-                          strOption: '',
-                          idOption: _listOptions[index].idOption,
-                          idEvaluation: _listOptions[index].idEvaluation)
-                    ]);
-                  } else {
-                    _provider.listResponses.add([
-                      Response(
-                          idProyecto: idProyecto,
-                          strOption: '',
-                          idOption: _listOptions[index].idOption,
-                          idEvaluation: _listOptions[index].idEvaluation)
-                    ]);
-                  }
+                  _response = [_responseTemp];
+
+                  _provider.listResponses[index] = _response;
+
+                  _provider.notifyListeners();
+
 
                 },
                 child: Container(
                   child: GradientIcon(
-                    icon: _response[0].idOption == _listOptions[index].idOption
-                        ? CupertinoIcons.circle_filled
-                        : CupertinoIcons.circle,
+                    icon: existe ?
+
+                        CupertinoIcons.circle_filled
+                        : CupertinoIcons.circle ,
                     size: (MediaQuery.of(context).size.height) / 40,
                     gradient: const LinearGradient(
                       begin: Alignment.centerLeft,
