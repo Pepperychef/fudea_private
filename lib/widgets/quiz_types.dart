@@ -349,7 +349,6 @@ class QuizTypes extends StatelessWidget {
                   _provider.notifyListeners();
                 },
                 child: Container(
-                  padding: EdgeInsets.all(10),
                   child: Row(
                     children: <Widget>[
                       Expanded(

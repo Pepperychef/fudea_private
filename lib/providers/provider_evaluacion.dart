@@ -24,12 +24,6 @@ class ProviderEvaluacion with ChangeNotifier{
     required this.listResponses
 });
 
-  void updateResponse(List<Response> response, int index){
-
-    listResponses[index] = response;
-    notifyListeners();
-
-  }
 
   Future<bool> onWillPop(BuildContext context) async {
 
@@ -38,11 +32,14 @@ class ProviderEvaluacion with ChangeNotifier{
 
     faltanDatos = false;
 
+    int _position = 0;
+
     for(List<Response> _tmp in listResponses){
-      if(_tmp.isEmpty){
+      if(_tmp.isEmpty && listEvaluation[_position].tipo!='seccion'){
         faltanDatos = true;
         break;
       }
+      _position++;
     }
 
     if(faltanDatos){
