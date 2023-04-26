@@ -337,7 +337,8 @@ Future<void> sendFilesToServer(
     }
 
     Map visitData = {
-      "id_visita": visit.idProyecto.toString(),
+      "id_proyecto": visit.idProyecto.toString(),
+      "id_terreno": visit.idSalidaTerreno.toString(),
       "img_acta": imgActa.toString(),
       "img_evidencia": imgEvidencia.toString(),
       "arch_audio": grabaciones,
@@ -351,10 +352,13 @@ Future<void> sendFilesToServer(
   }
 
   Constantes constantes = Constantes();
+  print(idUsuario);
+  print(visitas2);
 
   var response = await http.post(Uri.parse('${constantes.url}upload'),
       body: jsonEncode(
           <String, dynamic>{'idUsuario': idUsuario, 'visitas': visitas2}));
+    print(response.body);
 
   await Future.delayed(const Duration(seconds: 2));
 
