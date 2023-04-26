@@ -296,16 +296,18 @@ Future<void> sendFilesToServer(
         await _evaluationDao.findEvaluationsByVisitId(visit.idProyecto);
 
     for (Evaluation evaluation in _listPreguntas) {
-      List<Response> _tmp =
-          await _responseDao.findResponsesByEvaluationId(evaluation.idPregunta);
+      if(evaluation.tipo != 'seccion'){
+        List<Response> _tmp =
+        await _responseDao.findResponsesByEvaluationId(evaluation.idPregunta);
 
-      Map respData = {
-        "id_pregunta": _tmp.first.idEvaluation.toString(),
-        "id_respuesta": List.generate(
-            _tmp.length, (index) => _tmp[index].idOption.toString()),
-        "texto_respuesta": _tmp.first.strOption,
-      };
-      respuestas.add(respData);
+        Map respData = {
+          "id_pregunta": _tmp.first.idEvaluation.toString(),
+          "id_respuesta": List.generate(
+              _tmp.length, (index) => _tmp[index].idOption.toString()),
+          "texto_respuesta": _tmp.first.strOption,
+        };
+        respuestas.add(respData);
+      }
     }
 
     List<Attachment> attachments =
