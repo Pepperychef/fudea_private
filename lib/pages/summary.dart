@@ -167,7 +167,6 @@ class Summary extends StatelessWidget {
                                         if(visit.incluyeEvaluacion){
                                           final directory = await getApplicationDocumentsDirectory();
                                           String _extraId = getIdByDateTime();
-                                          String path = '${directory.path}/respuesta${localId}$_extraId.m4a';
                                           Navigator.push(
                                               context,
                                               MaterialPageRoute(
@@ -176,7 +175,7 @@ class Summary extends StatelessWidget {
                                                       providers: [
                                                         ChangeNotifierProvider.value(value: _providerEvaluacion),
                                                         ChangeNotifierProvider.value(value: ProviderGrabadorEncuesta(idEvaluation: localId, visit: visit,
-                                                            recording: FlutterAudioRecorder2(path), localFilePath: path))
+                                                            ))
                                                       ])));
                                         }
                                       },
