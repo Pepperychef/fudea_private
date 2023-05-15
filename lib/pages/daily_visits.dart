@@ -153,7 +153,6 @@ class DailyVisits extends StatelessWidget {
 
                                   final directory = await getApplicationDocumentsDirectory();
                                   String _extraId = getIdByDateTime();
-                                  String path = '${directory.path}/respuestaresumen${_providerVisitas.visits[index].idProyecto}$_extraId.m4a';
 
                                   List<List<Response>> listResponses =
                                   List.generate(
@@ -173,8 +172,7 @@ class DailyVisits extends StatelessWidget {
                                             ChangeNotifierProvider.value(value: ProviderGrabadorResumen(
                                             idEvaluation: _providerVisitas.visits[index].idProyecto,
                                             visit: _providerVisitas.visits[index],
-                                            recording: FlutterAudioRecorder2(path),
-                                            localFilePath: path)),
+                                            )),
                                             ChangeNotifierProvider.value(value: _providerVisitas),
                                             ChangeNotifierProvider.value(
                                             value: ProviderSummary()),

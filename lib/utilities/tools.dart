@@ -319,14 +319,19 @@ Future<void> sendFilesToServer(
     String arch_audio_resumen = '';
 
     for (Attachment att in attachments) {
-      String binary = await codifyBinary(att.binaryFile);
+      if(att.type == 'img_acta'){
+        imgActa = await codifyBinary(att.binaryFile);
+      }
+      if(att.type == 'img_evidencia'){
+        imgEvidencia = await codifyBinary(att.binaryFile);
+      }
+      if(att.type == 'arch_audio'){
+        arch_audio = await codifyBinary(att.binaryFile+'.wav');
+      }
+      if(att.type == 'arch_audio_summary'){
+        arch_audio_resumen = await codifyBinary(att.binaryFile+'.wav');
+      }
 
-      case2(att.type, {
-        'img_acta': imgActa = binary,
-        'img_evidencia': imgEvidencia = binary,
-        'arch_audio': arch_audio = binary,
-        'arch_audio_summary': arch_audio_resumen = binary
-      });
     }
 
     List<String> grabaciones = [];

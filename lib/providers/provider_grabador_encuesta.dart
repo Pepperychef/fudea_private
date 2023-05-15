@@ -1,6 +1,7 @@
 
 
 import 'dart:async';
+import 'dart:io' as io;
 
 import 'package:file/file.dart';
 import 'package:file/local.dart';
@@ -11,13 +12,14 @@ import 'package:fudea/data/entities/attachment.dart';
 import 'package:fudea/data/entities/visit.dart';
 import 'package:fudea/utilities/future_daos.dart';
 import 'package:fudea/utilities/tools.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class ProviderGrabadorEncuesta with ChangeNotifier{
 
-  FlutterAudioRecorder2 recording;
+  FlutterAudioRecorder2? recording;
   bool isRecording = false;
-  String localFilePath;
+  String localFilePath='';
   String textDuration = '';
   Visit visit;
   int idEvaluation;
@@ -26,16 +28,34 @@ class ProviderGrabadorEncuesta with ChangeNotifier{
   String valueRespuesta = '';
 
   ProviderGrabadorEncuesta({
-    required this.recording,
     required this.visit,
     required this.idEvaluation,
-    required this.localFilePath
   }){
+    init();
+  }
+
+  init() async {
+    String customPath = '/fudea_audio_visit_';
+    io.Directory appDocDirectory;
+    if (io.Platform.isIOS) {
+      appDocDirectory = await getApplicationDocumentsDirectory();
+    } else {
+      appDocDirectory = (await getExternalStorageDirectory())!;
+    }
+
+    localFilePath = appDocDirectory.path +
+        customPath +
+        DateTime.now().millisecondsSinceEpoch.toString();
+
+    recording =
+        FlutterAudioRecorder2(localFilePath, audioFormat: AudioFormat.WAV);
+
+    await recording!.initialized;
     getValueRespuesta();
   }
 
   saveRecording() async {
-    recording.stop();
+    recording!.stop();
     isRecording = false;
 
 
@@ -75,7 +95,7 @@ class ProviderGrabadorEncuesta with ChangeNotifier{
   }
 
   Future<void> getValueRespuesta()async{
-    await recording.initialized;
+    await recording!.initialized;
     String resp = '';
     AttachmentDao _dao = await FutureDaos().attachmentDaoFuture();
     Attachment? _tmp = await _dao.findAttachmentsByEvaluationId(visit.idProyecto, idEvaluation);
@@ -109,12 +129,12 @@ class ProviderGrabadorEncuesta with ChangeNotifier{
             file = localFileSystem.file(localFilePath);
             if (file != null) {
               file.deleteSync();
-              recording.initialized;
+              recording!.initialized;
             }
           }
         }
 
-        recording.start();
+        recording!.start();
 
         isRecording = true;
 
