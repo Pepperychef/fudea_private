@@ -350,12 +350,14 @@ Future<void> sendFilesToServer(
       },
       "evaluacion": respuestas,
     };
+    if (imgActa == imgEvidencia){
+      print("son iguales");
+    }
+
     visitas2.add(visitData);
   }
 
   Constantes constantes = Constantes();
-  print(idUsuario);
-  print(visitas2);
 
   var response = await http.post(Uri.parse('${constantes.url}upload'),
       body: jsonEncode(
