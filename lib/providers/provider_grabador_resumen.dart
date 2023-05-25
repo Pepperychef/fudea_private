@@ -20,7 +20,8 @@ import '../widgets_encuesta_formulario/grabador.dart' as grabador;
 class ProviderGrabadorResumen with ChangeNotifier {
   FlutterAudioRecorder2? recording;
   bool isRecording = false;
-  String localFilePath = '';
+  String localFilePath;
+  String localFilePathEncuesta;
   String textDuration = '';
   Visit visit;
   int idEvaluation;
@@ -31,22 +32,13 @@ class ProviderGrabadorResumen with ChangeNotifier {
   ProviderGrabadorResumen({
     required this.visit,
     required this.idEvaluation,
+    required this.localFilePath,
+    required this.localFilePathEncuesta
   }) {
-    init();
+    //init();
   }
 
-  init() async {
-    String customPath = '/fudea_audio_';
-    io.Directory appDocDirectory;
-    if (io.Platform.isIOS) {
-      appDocDirectory = await getApplicationDocumentsDirectory();
-    } else {
-      appDocDirectory = (await getExternalStorageDirectory())!;
-    }
-
-    localFilePath = appDocDirectory.path +
-        customPath +
-        DateTime.now().millisecondsSinceEpoch.toString();
+  Future<void> init() async {
 
     recording =
         FlutterAudioRecorder2(localFilePath, audioFormat: AudioFormat.WAV);
@@ -56,14 +48,8 @@ class ProviderGrabadorResumen with ChangeNotifier {
   }
 
   saveRecording() async {
-    var result = await recording!.stop();
+    await recording!.stop();
     isRecording = false;
-    var localFileSystem = const LocalFileSystem();
-
-    print("Stop recording: ${result!.path}");
-    print("Stop recording: ${result.duration}");
-    File file = localFileSystem.file(result.path);
-    print("File length: ${await file.length()}");
 
     if (localFilePath != '') {
       Attachment _tmp = Attachment(
@@ -109,7 +95,7 @@ class ProviderGrabadorResumen with ChangeNotifier {
     String resp = '';
     AttachmentDao _dao = await FutureDaos().attachmentDaoFuture();
     Attachment? _tmp = await _dao.findAttachmentsByEvaluationId(
-        visit.idProyecto, idEvaluation);
+        visit.idProyecto, idEvaluation, 'arch_audio_summary');
     if (_tmp != null) {
       resp = _tmp.binaryFile;
       valueRespuesta = resp;
@@ -119,6 +105,10 @@ class ProviderGrabadorResumen with ChangeNotifier {
 
   startRecording(BuildContext context) async {
     try {
+
+      await init();
+      print('test');
+
       Map<Permission, PermissionStatus> permission = await [
         Permission.microphone,
         //Permission.manageExternalStorage

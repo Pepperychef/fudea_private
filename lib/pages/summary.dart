@@ -174,7 +174,8 @@ class Summary extends StatelessWidget {
                                                       child: EvaluationPage(),
                                                       providers: [
                                                         ChangeNotifierProvider.value(value: _providerEvaluacion),
-                                                        ChangeNotifierProvider.value(value: ProviderGrabadorEncuesta(idEvaluation: localId, visit: visit,
+                                                        ChangeNotifierProvider.value(value: ProviderGrabadorEncuesta(
+                                                          idEvaluation: localId, visit: visit,localFilePath: _providerVisitas.localFilePathEncuesta
                                                             ))
                                                       ])));
                                         }

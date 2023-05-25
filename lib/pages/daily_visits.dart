@@ -172,6 +172,8 @@ class DailyVisits extends StatelessWidget {
                                             ChangeNotifierProvider.value(value: ProviderGrabadorResumen(
                                             idEvaluation: _providerVisitas.visits[index].idProyecto,
                                             visit: _providerVisitas.visits[index],
+                                              localFilePathEncuesta: _providerVisitas.localFilePathEncuesta,
+                                              localFilePath: _providerVisitas.localFilePathResumen
                                             )),
                                             ChangeNotifierProvider.value(value: _providerVisitas),
                                             ChangeNotifierProvider.value(

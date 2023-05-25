@@ -1,7 +1,4 @@
-
-
 import 'dart:async';
-import 'dart:io' as io;
 
 import 'package:file/file.dart';
 import 'package:file/local.dart';
@@ -12,14 +9,13 @@ import 'package:fudea/data/entities/attachment.dart';
 import 'package:fudea/data/entities/visit.dart';
 import 'package:fudea/utilities/future_daos.dart';
 import 'package:fudea/utilities/tools.dart';
-import 'package:path_provider/path_provider.dart';
+
 import 'package:permission_handler/permission_handler.dart';
 
-class ProviderGrabadorEncuesta with ChangeNotifier{
-
+class ProviderGrabadorEncuesta with ChangeNotifier {
   FlutterAudioRecorder2? recording;
   bool isRecording = false;
-  String localFilePath='';
+  String localFilePath;
   String textDuration = '';
   Visit visit;
   int idEvaluation;
@@ -30,22 +26,12 @@ class ProviderGrabadorEncuesta with ChangeNotifier{
   ProviderGrabadorEncuesta({
     required this.visit,
     required this.idEvaluation,
-  }){
+    required this.localFilePath
+  }) {
     init();
   }
 
   init() async {
-    String customPath = '/fudea_audio_visit_';
-    io.Directory appDocDirectory;
-    if (io.Platform.isIOS) {
-      appDocDirectory = await getApplicationDocumentsDirectory();
-    } else {
-      appDocDirectory = (await getExternalStorageDirectory())!;
-    }
-
-    localFilePath = appDocDirectory.path +
-        customPath +
-        DateTime.now().millisecondsSinceEpoch.toString();
 
     recording =
         FlutterAudioRecorder2(localFilePath, audioFormat: AudioFormat.WAV);
@@ -55,9 +41,8 @@ class ProviderGrabadorEncuesta with ChangeNotifier{
   }
 
   saveRecording() async {
-    recording!.stop();
+    await recording!.stop();
     isRecording = false;
-
 
     if (localFilePath != '') {
       Attachment _tmp = Attachment(
@@ -65,11 +50,14 @@ class ProviderGrabadorEncuesta with ChangeNotifier{
           type: 'arch_audio',
           binaryFile: localFilePath,
           idEvaluation: idEvaluation);
-      await saveAttachemnts(data: _tmp, finalSave: false, idEvaluation: idEvaluation, type: 'arch_audio');
+      await saveAttachemnts(
+          data: _tmp,
+          finalSave: false,
+          idEvaluation: idEvaluation,
+          type: 'arch_audio');
     }
 
     notifyListeners();
-
   }
 
   deleteRecording() async {
@@ -80,8 +68,9 @@ class ProviderGrabadorEncuesta with ChangeNotifier{
       var localFileSystem = const LocalFileSystem();
       File? file;
       if (localFilePath != '') {
-        if (localFileSystem.file(localFilePath).existsSync())
-          {file = localFileSystem.file(localFilePath);}
+        if (localFileSystem.file(localFilePath).existsSync()) {
+          file = localFileSystem.file(localFilePath);
+        }
       } else {
         if (localFileSystem.file('$path').existsSync()) {
           file = localFileSystem.file('$path');
@@ -94,25 +83,21 @@ class ProviderGrabadorEncuesta with ChangeNotifier{
     }
   }
 
-  Future<void> getValueRespuesta()async{
+  Future<void> getValueRespuesta() async {
     await recording!.initialized;
     String resp = '';
     AttachmentDao _dao = await FutureDaos().attachmentDaoFuture();
-    Attachment? _tmp = await _dao.findAttachmentsByEvaluationId(visit.idProyecto, idEvaluation);
-    if(_tmp!= null){
+    Attachment? _tmp = await _dao.findAttachmentsByEvaluationId(
+        visit.idProyecto, idEvaluation, 'arch_audio');
+    if (_tmp != null) {
       resp = _tmp.binaryFile;
       valueRespuesta = resp;
       localFilePath = _tmp.binaryFile;
     }
-
-
-
-
   }
 
   startRecording(BuildContext context) async {
     try {
-
       Map<Permission, PermissionStatus> permission = await [
         Permission.microphone,
         //Permission.manageExternalStorage
@@ -121,7 +106,6 @@ class ProviderGrabadorEncuesta with ChangeNotifier{
       bool? haspermission = await FlutterAudioRecorder2.hasPermissions;
 
       if (haspermission!) {
-
         var localFileSystem = const LocalFileSystem();
         File? file;
         if (localFilePath != '') {
@@ -139,19 +123,13 @@ class ProviderGrabadorEncuesta with ChangeNotifier{
         isRecording = true;
 
         notifyListeners();
-
-
       } else {
         Scaffold.of(context).showSnackBar(
-             const SnackBar(content:  Text("Debes aceptar los permisos")));
+            const SnackBar(content: Text("Debes aceptar los permisos")));
         //await PermissionsPlugin.requestPermissions([Permission.RECORD_AUDIO, Permission.WRITE_EXTERNAL_STORAGE]);
       }
     } catch (e) {
       print(e);
     }
   }
-
-
-
-
 }
