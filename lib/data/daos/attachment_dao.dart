@@ -7,8 +7,8 @@ abstract class AttachmentDao{
   @Query('SELECT * FROM Attachment WHERE idVisita = :idVisita')
   Future<List<Attachment>> findAttachmentsByVisitId(int idVisita);
 
-  @Query('SELECT * FROM Attachment WHERE idVisita = :idVisita AND idEvaluation = :idEvaluation LIMIT 1')
-  Future<Attachment?> findAttachmentsByEvaluationId(int idVisita, int idEvaluation);
+  @Query('SELECT * FROM Attachment WHERE idVisita = :idVisita AND idEvaluation = :idEvaluation AND type = :type LIMIT 1')
+  Future<Attachment?> findAttachmentsByEvaluationId(int idVisita, int idEvaluation, String type);
 
   @Query('SELECT * FROM Attachment WHERE idVisita = :idVisita AND idEvaluation = :idEvaluation AND type = :type LIMIT 1')
   Future<Attachment?> findAttachmentsByEvaluationIdAndType(int idVisita, int idEvaluation, String type);

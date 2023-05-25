@@ -649,11 +649,11 @@ class _$AttachmentDao extends AttachmentDao {
 
   @override
   Future<Attachment?> findAttachmentsByEvaluationId(
-      int idVisita, int idEvaluation) async {
+      int idVisita, int idEvaluation, String type) async {
     return _queryAdapter.query(
-        'SELECT * FROM Attachment WHERE idVisita = ?1 AND idEvaluation = ?2 LIMIT 1',
+        'SELECT * FROM Attachment WHERE idVisita = ?1 AND idEvaluation = ?2 AND type = ?3 LIMIT 1',
         mapper: (Map<String, Object?> row) => Attachment(id: row['id'] as int?, idVisita: row['idVisita'] as int, idEvaluation: row['idEvaluation'] as int, type: row['type'] as String, binaryFile: row['binaryFile'] as String),
-        arguments: [idVisita, idEvaluation]);
+        arguments: [idVisita, idEvaluation, type]);
   }
 
   @override
