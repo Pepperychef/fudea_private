@@ -340,9 +340,13 @@ Future<void> sendFilesToServer(
       grabaciones.add(arch_audio);
     }
     if (arch_audio_resumen != '') {
+
       grabaciones.add(arch_audio_resumen);
     }
 
+    if(arch_audio_resumen == arch_audio){
+      print("son iguales los audios");
+    }
     Map visitData = {
       "id_proyecto": visit.idProyecto.toString(),
       "id_terreno": visit.idSalidaTerreno.toString(),
@@ -355,10 +359,7 @@ Future<void> sendFilesToServer(
       },
       "evaluacion": respuestas,
     };
-    if (imgActa == imgEvidencia){
-      print("son iguales");
-    }
-
+    print(arch_audio);
     visitas2.add(visitData);
   }
 

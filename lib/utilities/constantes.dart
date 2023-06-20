@@ -5,7 +5,7 @@ class Constantes {
   static const String databaseName = 'peppery_database.db';
   static const int databaseVersion = 1;
   String url =
-      'http://vps-2872295-x.dattaweb.com:8069/operaciones/app/visitas/';
+      'http://vps-2872295-x.dattaweb.com:9069/operaciones/app/visitas2/';
 
 
   Future<AppDatabase> databaseFuture() async {

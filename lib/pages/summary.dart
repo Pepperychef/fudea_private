@@ -16,7 +16,6 @@ import '../utilities/tools.dart';
 import '../widgets_encuesta_formulario/respuesta_audio.dart';
 
 class Summary extends StatelessWidget {
-
   int localId;
   int visitPositon;
   Visit visit;
@@ -26,30 +25,35 @@ class Summary extends StatelessWidget {
   late ProviderVisitas _providerVisitas;
   late ProviderGrabadorResumen _providerGrabador;
 
-  Summary({Key? key, required this.localId, required this.visit, required this.visitPositon}) : super(key: key);
+  Summary(
+      {Key? key,
+      required this.localId,
+      required this.visit,
+      required this.visitPositon})
+      : super(key: key);
 
   @override
   Widget build(BuildContext _context) {
-
     _providerEvaluacion = Provider.of<ProviderEvaluacion>(_context);
     _providerSummary = Provider.of<ProviderSummary>(_context);
     _providerVisitas = Provider.of<ProviderVisitas>(_context);
     _providerGrabador = Provider.of<ProviderGrabadorResumen>(_context);
 
-    return WillPopScope(child: Scaffold(
-      body: Builder(
-        builder: (context)=>SingleChildScrollView(
-          child: ConstrainedBox(
-            constraints: BoxConstraints(
-              maxHeight: MediaQuery.of(context).size.height,
-            ),
-            child: Stack(
-              children: [
-                Column(
+    return WillPopScope(
+        child: Scaffold(
+          body: Builder(
+            builder: (context) => SingleChildScrollView(
+              child: ConstrainedBox(
+                constraints: BoxConstraints(
+                  maxHeight: MediaQuery.of(context).size.height,
+                ),
+                child: Stack(
                   children: [
-                    Container(
-                      decoration: const BoxDecoration(
-                          gradient: LinearGradient(
+                    Column(
+                      children: [
+                        Container(
+                          decoration: const BoxDecoration(
+                              gradient: LinearGradient(
                             begin: Alignment.topCenter,
                             end: Alignment.bottomCenter,
                             colors: <Color>[
@@ -57,20 +61,20 @@ class Summary extends StatelessWidget {
                               Color.fromRGBO(0, 95, 146, 1)
                             ],
                           )),
-                      height: MediaQuery.of(context).size.height / 5.7,
-
-                    ),
-                    SizedBox(
-                      width: MediaQuery.of(context).size.width,
-                      height: MediaQuery.of(context).size.height / 5,
-                      child: Stack(children: [
-                        Image.asset(
-                          'assets/img/curva_colores.png',
-
-                          fit: BoxFit.cover,
-                          //height: 120.0,
+                          height: MediaQuery.of(context).size.height / 5.7,
                         ),
-                       /* Positioned.fill(
+                        SizedBox(
+                          width: MediaQuery.of(context).size.width,
+                          height: MediaQuery.of(context).size.height / 5,
+                          child: Stack(
+                            children: [
+                              Image.asset(
+                                'assets/img/curva_colores.png',
+
+                                fit: BoxFit.cover,
+                                //height: 120.0,
+                              ),
+                              /* Positioned.fill(
                           child: Align(
                             alignment: Alignment.centerRight,
                             child: Container(
@@ -104,16 +108,16 @@ class Summary extends StatelessWidget {
                             ),
                           ),
                         )*/
-
-                      ],),
-                    ),
-
-                    Expanded(
-                        child: Container(
+                            ],
+                          ),
+                        ),
+                        Expanded(
+                            child: Container(
                           height: MediaQuery.of(context).size.height / 2.5,
                           color: Colors.white,
                           alignment: Alignment.center,
-                          padding: const EdgeInsets.only(bottom: 120, left: 40, right: 40),
+                          padding: const EdgeInsets.only(
+                              bottom: 120, left: 40, right: 40),
                           child: Column(
                             mainAxisSize: MainAxisSize.max,
                             crossAxisAlignment: CrossAxisAlignment.center,
@@ -122,20 +126,27 @@ class Summary extends StatelessWidget {
                               Row(
                                 mainAxisSize: MainAxisSize.max,
                                 crossAxisAlignment: CrossAxisAlignment.center,
-                                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
                                 children: [
                                   SizedBox(
-                                      height: (MediaQuery.of(context).size.height) / 6.5,
-                                      width: (MediaQuery.of(context).size.height) / 6.5,
+                                      height:
+                                          (MediaQuery.of(context).size.height) /
+                                              6.5,
+                                      width:
+                                          (MediaQuery.of(context).size.height) /
+                                              6.5,
                                       //square box; equal height and width so that it won't look like oval
                                       child: GestureDetector(
+                                        onLongPress: () => helpLongPress(context, "Fotografía acta firmada"),
                                         onTap: () {
-                                          _providerSummary.getImage(context, visit.idProyecto, 'img_acta');
-
+                                          _providerSummary.getImage(context,
+                                              visit.idProyecto, 'img_acta');
                                         },
                                         child: Card(
                                           shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(80),
+                                            borderRadius:
+                                                BorderRadius.circular(80),
                                             //set border radius more than 50% of height and width to make circle
                                           ),
                                           child: Container(
@@ -145,64 +156,93 @@ class Summary extends StatelessWidget {
                                                   begin: Alignment.centerLeft,
                                                   end: Alignment.centerRight,
                                                   colors: <Color>[
-                                                    Color.fromRGBO(0, 95, 146, 1),
-                                                    Color.fromRGBO(28, 59, 112, 1),
+                                                    Color.fromRGBO(
+                                                        0, 95, 146, 1),
+                                                    Color.fromRGBO(
+                                                        28, 59, 112, 1),
                                                   ],
                                                 )),
-                                            child:  Icon(
-                                              CupertinoIcons.camera,
+                                            child: Icon(
+                                              Icons.document_scanner_outlined,
                                               color: Colors.white,
-                                              size: (MediaQuery.of(context).size.height) / 10.5,
+                                              size: (MediaQuery.of(context)
+                                                      .size
+                                                      .height) /
+                                                  10.5,
                                             ),
                                           ),
                                         ),
                                       )),
                                   SizedBox(
-                                    height: (MediaQuery.of(context).size.height) / 6.5,
-                                    width: (MediaQuery.of(context).size.height) / 6.5,
+                                    height:
+                                        (MediaQuery.of(context).size.height) /
+                                            6.5,
+                                    width:
+                                        (MediaQuery.of(context).size.height) /
+                                            6.5,
                                     //square box; equal height and width so that it won't look like oval
                                     child: GestureDetector(
-
+                                      onLongPress: () => helpLongPress(context, "Instrumento para aplicar"),
                                       onTap: () async {
-                                        if(visit.incluyeEvaluacion){
-                                          final directory = await getApplicationDocumentsDirectory();
+                                        if (visit.incluyeEvaluacion) {
+                                          final directory =
+                                              await getApplicationDocumentsDirectory();
                                           String _extraId = getIdByDateTime();
                                           Navigator.push(
                                               context,
                                               MaterialPageRoute(
-                                                  builder: (context) => MultiProvider(
-                                                      child: EvaluationPage(),
-                                                      providers: [
-                                                        ChangeNotifierProvider.value(value: _providerEvaluacion),
-                                                        ChangeNotifierProvider.value(value: ProviderGrabadorEncuesta(
-                                                          idEvaluation: localId, visit: visit,localFilePath: _providerVisitas.localFilePathEncuesta+'$localId'
-                                                            ))
-                                                      ])));
+                                                  builder: (context) =>
+                                                      MultiProvider(
+                                                          child:
+                                                              EvaluationPage(),
+                                                          providers: [
+                                                            ChangeNotifierProvider
+                                                                .value(
+                                                                    value:
+                                                                        _providerEvaluacion),
+                                                            ChangeNotifierProvider.value(
+                                                                value: ProviderGrabadorEncuesta(
+                                                                    idEvaluation:
+                                                                        localId,
+                                                                    visit:
+                                                                        visit,
+                                                                    localFilePath:
+                                                                        _providerVisitas.localFilePathEncuesta +
+                                                                            '$localId'))
+                                                          ])));
                                         }
                                       },
                                       child: Card(
                                         shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(80),
+                                          borderRadius:
+                                              BorderRadius.circular(80),
                                           //set border radius more than 50% of height and width to make circle
                                         ),
                                         child: Container(
-                                          decoration:  BoxDecoration(
+                                          decoration: BoxDecoration(
                                               shape: BoxShape.circle,
                                               gradient: LinearGradient(
                                                 begin: Alignment.centerLeft,
                                                 end: Alignment.centerRight,
-                                                colors:visit.incluyeEvaluacion? <Color>[
-                                                  const Color.fromRGBO(0, 95, 146, 1),
-                                                  const Color.fromRGBO(28, 59, 112, 1),
-                                                ]: <Color>[
-                                                  Colors.grey,
-                                                  Colors.grey,
-                                                ],
+                                                colors: visit.incluyeEvaluacion
+                                                    ? <Color>[
+                                                        const Color.fromRGBO(
+                                                            0, 95, 146, 1),
+                                                        const Color.fromRGBO(
+                                                            28, 59, 112, 1),
+                                                      ]
+                                                    : <Color>[
+                                                        Colors.grey,
+                                                        Colors.grey,
+                                                      ],
                                               )),
-                                          child:  Icon(
+                                          child: Icon(
                                             CupertinoIcons.doc_plaintext,
                                             color: Colors.white,
-                                            size: (MediaQuery.of(context).size.height) / 10.5,
+                                            size: (MediaQuery.of(context)
+                                                    .size
+                                                    .height) /
+                                                10.5,
                                           ),
                                         ),
                                       ),
@@ -213,17 +253,21 @@ class Summary extends StatelessWidget {
                               Row(
                                 mainAxisSize: MainAxisSize.max,
                                 crossAxisAlignment: CrossAxisAlignment.center,
-                                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
                                 children: [
                                   SizedBox(
-                                     height: (MediaQuery.of(context).size.height) / 6.5,
-                                      width: (MediaQuery.of(context).size.height) / 6.5,
+                                      height:
+                                          (MediaQuery.of(context).size.height) /
+                                              6.5,
+                                      width:
+                                          (MediaQuery.of(context).size.height) /
+                                              6.5,
                                       //square box; equal height and width so that it won't look like oval
-                                      child:
-
-                                      Card(
+                                      child: Card(
                                         shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(80),
+                                          borderRadius:
+                                              BorderRadius.circular(80),
                                           //set border radius more than 50% of height and width to make circle
                                         ),
                                         child: Container(
@@ -234,34 +278,49 @@ class Summary extends StatelessWidget {
                                                 end: Alignment.centerRight,
                                                 colors: <Color>[
                                                   Color.fromRGBO(0, 95, 146, 1),
-                                                  Color.fromRGBO(28, 59, 112, 1),
+                                                  Color.fromRGBO(
+                                                      28, 59, 112, 1),
                                                 ],
                                               )),
-                                          child:  RespuestaAudio(
-                                            iconSize: MediaQuery.of(context).size.height / 18,
+                                          child: RespuestaAudio(
+                                            iconSize: MediaQuery.of(context)
+                                                    .size
+                                                    .height /
+                                                18,
                                             completada: false,
-                                            onPressedGuardar: () => _providerGrabador.saveRecording(),
+                                            onPressedGuardar: () =>
+                                                _providerGrabador
+                                                    .saveRecording(),
                                             onPressedStart: () {
-                                              _providerGrabador.startRecording(context);
+                                              _providerGrabador
+                                                  .startRecording(context);
                                             },
                                             enabled: true,
-                                            onPressedBorrar: () => _providerGrabador.deleteRecording(),
-                                            isRecording: _providerGrabador.isRecording,
+                                            onPressedBorrar: () =>
+                                                _providerGrabador
+                                                    .deleteRecording(),
+                                            isRecording:
+                                                _providerGrabador.isRecording,
                                           ),
                                         ),
                                       )),
                                   SizedBox(
-                                      height: (MediaQuery.of(context).size.height) / 6.5,
-                                      width: (MediaQuery.of(context).size.height) / 6.5,
+                                      height:
+                                          (MediaQuery.of(context).size.height) /
+                                              6.5,
+                                      width:
+                                          (MediaQuery.of(context).size.height) /
+                                              6.5,
                                       //square box; equal height and width so that it won't look like oval
                                       child: GestureDetector(
-                                        onTap: () async{
-
-                                         ///Aqui se da funcionalidad al boton
+                                        onLongPress: () => helpLongPress(context, "Boton para la información"),
+                                        onTap: () async {
+                                          ///Aqui se da funcionalidad al boton
                                         },
                                         child: Card(
                                           shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(80),
+                                            borderRadius:
+                                                BorderRadius.circular(80),
                                             //set border radius more than 50% of height and width to make circle
                                           ),
                                           child: Container(
@@ -271,14 +330,19 @@ class Summary extends StatelessWidget {
                                                   begin: Alignment.centerLeft,
                                                   end: Alignment.centerRight,
                                                   colors: <Color>[
-                                                    Color.fromRGBO(240, 125, 0, 1),
-                                                    Color.fromRGBO(225, 191, 0, 1),
+                                                    Color.fromRGBO(
+                                                        240, 125, 0, 1),
+                                                    Color.fromRGBO(
+                                                        225, 191, 0, 1),
                                                   ],
                                                 )),
-                                            child:  Icon(
+                                            child: Icon(
                                               CupertinoIcons.question,
                                               color: Colors.white,
-                                              size: (MediaQuery.of(context).size.height) / 10.5,
+                                              size: (MediaQuery.of(context)
+                                                      .size
+                                                      .height) /
+                                                  10.5,
                                             ),
                                           ),
                                         ),
@@ -288,19 +352,31 @@ class Summary extends StatelessWidget {
                               Row(
                                 mainAxisSize: MainAxisSize.max,
                                 crossAxisAlignment: CrossAxisAlignment.center,
-                                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
                                 children: [
                                   SizedBox(
-                                      height: (MediaQuery.of(context).size.height) / 6.5,
-                                      width: (MediaQuery.of(context).size.height) / 6.5,
+                                      height:
+                                          (MediaQuery.of(context).size.height) /
+                                              6.5,
+                                      width:
+                                          (MediaQuery.of(context).size.height) /
+                                              6.5,
                                       //square box; equal height and width so that it won't look like oval
                                       child: GestureDetector(
+                                        onLongPress: () {
+                                          helpLongPress(context, "Fotografía de evidencia");
+                                        },
                                         onTap: () {
-                                          _providerSummary.getImage(context, visit.idProyecto, 'img_evidencia');
+                                          _providerSummary.getImage(
+                                              context,
+                                              visit.idProyecto,
+                                              'img_evidencia');
                                         },
                                         child: Card(
                                           shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(80),
+                                            borderRadius:
+                                                BorderRadius.circular(80),
                                             //set border radius more than 50% of height and width to make circle
                                           ),
                                           child: Container(
@@ -310,50 +386,79 @@ class Summary extends StatelessWidget {
                                                   begin: Alignment.centerLeft,
                                                   end: Alignment.centerRight,
                                                   colors: <Color>[
-                                                    Color.fromRGBO(240, 125, 0, 1),
-                                                    Color.fromRGBO(225, 191, 0, 1),
+                                                    Color.fromRGBO(
+                                                        240, 125, 0, 1),
+                                                    Color.fromRGBO(
+                                                        225, 191, 0, 1),
                                                   ],
                                                 )),
-                                            child:  Icon(
-                                              CupertinoIcons.shield_lefthalf_fill,
+                                            child: Icon(
+                                              Icons.add_a_photo_outlined,
                                               color: Colors.white,
-                                              size: (MediaQuery.of(context).size.height) / 10.5,
+                                              size: (MediaQuery.of(context)
+                                                      .size
+                                                      .height) /
+                                                  10.5,
                                             ),
                                           ),
                                         ),
                                       )),
                                   SizedBox(
-                                      height: (MediaQuery.of(context).size.height) / 6.5,
-                                      width: (MediaQuery.of(context).size.height) / 6.5,
+                                      height:
+                                          (MediaQuery.of(context).size.height) /
+                                              6.5,
+                                      width:
+                                          (MediaQuery.of(context).size.height) /
+                                              6.5,
                                       //square box; equal height and width so that it won't look like oval
                                       child: GestureDetector(
-                                        onTap: () async{
-
-                                          if(!_providerEvaluacion.faltanDatos &&
-                                              _providerSummary.imgEvidenciaSaved &&
-                                              _providerSummary.imgActaSaved){
-                                            _providerVisitas.visits[visitPositon] = await _providerSummary.saveResponses(_providerEvaluacion.listResponses, visit);
+                                        onTap: () async {
+                                          if (!_providerEvaluacion
+                                                  .faltanDatos &&
+                                              _providerSummary
+                                                  .imgEvidenciaSaved &&
+                                              _providerSummary.imgActaSaved) {
+                                            _providerVisitas
+                                                    .visits[visitPositon] =
+                                                await _providerSummary
+                                                    .saveResponses(
+                                                        _providerEvaluacion
+                                                            .listResponses,
+                                                        visit);
                                             _providerVisitas.notifyListeners();
                                             Navigator.pop(context);
-
-                                          }else{
+                                          } else {
                                             await showDialog(
                                               context: context,
                                               builder: (context) => AlertDialog(
-                                                title: const Text('Faltan datos para Guardar'),
+                                                title: const Text(
+                                                    'Faltan datos para Guardar'),
                                                 content: Column(
-                                                  mainAxisSize: MainAxisSize.min,
+                                                  mainAxisSize:
+                                                      MainAxisSize.min,
                                                   children: [
-                                                  _providerEvaluacion.faltanDatos?
-                                                  const Text('Debes completar la Evaluación'): Container(),
-                                                  !_providerSummary.imgEvidenciaSaved?
-                                                  const Text('Falta la imagen de Evidencia'): Container(),
-                                                  !_providerSummary.imgActaSaved?
-                                                  const Text('Falta la imagen del Acta'): Container()
-                                                ],),
+                                                    _providerEvaluacion
+                                                            .faltanDatos
+                                                        ? const Text(
+                                                            'Debes completar la Evaluación')
+                                                        : Container(),
+                                                    !_providerSummary
+                                                            .imgEvidenciaSaved
+                                                        ? const Text(
+                                                            'Falta la imagen de Evidencia')
+                                                        : Container(),
+                                                    !_providerSummary
+                                                            .imgActaSaved
+                                                        ? const Text(
+                                                            'Falta la imagen del Acta')
+                                                        : Container()
+                                                  ],
+                                                ),
                                                 actions: <Widget>[
                                                   TextButton(
-                                                    onPressed: () => Navigator.of(context).pop(false),
+                                                    onPressed: () =>
+                                                        Navigator.of(context)
+                                                            .pop(false),
                                                     child: const Text('OK'),
                                                   ),
                                                 ],
@@ -367,7 +472,8 @@ class Summary extends StatelessWidget {
                                         },
                                         child: Card(
                                           shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(80),
+                                            borderRadius:
+                                                BorderRadius.circular(80),
                                             //set border radius more than 50% of height and width to make circle
                                           ),
                                           child: Container(
@@ -377,14 +483,19 @@ class Summary extends StatelessWidget {
                                                   begin: Alignment.centerLeft,
                                                   end: Alignment.centerRight,
                                                   colors: <Color>[
-                                                    Color.fromRGBO(240, 125, 0, 1),
-                                                    Color.fromRGBO(225, 191, 0, 1),
+                                                    Color.fromRGBO(
+                                                        240, 125, 0, 1),
+                                                    Color.fromRGBO(
+                                                        225, 191, 0, 1),
                                                   ],
                                                 )),
-                                            child:  Icon(
+                                            child: Icon(
                                               CupertinoIcons.floppy_disk,
                                               color: Colors.white,
-                                              size: (MediaQuery.of(context).size.height) / 10.5,
+                                              size: (MediaQuery.of(context)
+                                                      .size
+                                                      .height) /
+                                                  10.5,
                                             ),
                                           ),
                                         ),
@@ -394,79 +505,94 @@ class Summary extends StatelessWidget {
                             ],
                           ),
                         )),
+                      ],
+                    ),
+                    Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Container(
+                          height: (MediaQuery.of(context).size.height) / 10.5,
+                          alignment: Alignment.topCenter,
+                          margin: EdgeInsets.only(
+                              top: (MediaQuery.of(context).size.height) / 16.5,
+                              right: (MediaQuery.of(context).size.width) / 9.5),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              IconButton(
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  },
+                                  iconSize:
+                                      (MediaQuery.of(context).size.height) /
+                                          26.5,
+                                  color: Colors.white,
+                                  icon: const Icon(CupertinoIcons.back)),
+                              Text(
+                                'MENÚ VISITA',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize:
+                                        (MediaQuery.of(context).size.height) /
+                                            36.5),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Container(
+                          alignment: Alignment.bottomCenter,
+                          child: Column(
+                            children: [
+                              Text(
+                                visit.nombreBeneficiario,
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize:
+                                        (MediaQuery.of(context).size.height) /
+                                            56.5),
+                              ),
+                              Text(
+                                'Telf: ${visit.telefonoContacto}',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize:
+                                        (MediaQuery.of(context).size.height) /
+                                            36.5),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
                   ],
                 ),
-
-                Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Container(
-                      height: (MediaQuery.of(context).size.height) /10.5,
-                      alignment: Alignment.topCenter,
-                      margin: EdgeInsets.only(
-                          top: (MediaQuery.of(context).size.height) / 16.5,
-                          right:
-                          (MediaQuery.of(context).size.width) / 9.5),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          IconButton(
-                              onPressed: () {
-                                Navigator.pop(context);
-                              },
-                              iconSize:
-                              (MediaQuery.of(context).size.height) /
-                                  26.5,
-                              color: Colors.white,
-                              icon: const Icon(CupertinoIcons.back)),
-                          Text(
-                            'RESUMEN',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontSize:
-                                (MediaQuery.of(context).size.height) /
-                                    36.5),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Container(
-                      alignment: Alignment.bottomCenter,
-                      child: Column(
-                        children: [
-                          Text(
-                            visit.nombreBeneficiario,
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontSize:
-                                (MediaQuery.of(context).size.height) /
-                                    56.5),
-                          ),
-                          Text(
-                            'Telf: ${visit.telefonoContacto}',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontSize:
-                                (MediaQuery.of(context).size.height) /
-                                    36.5),
-                          ),
-                        ],
-                      ),
-                    ),
-
-                  ],
-                ),
-
-              ],
-
+              ),
             ),
-
           ),
         ),
-      ),
-    ), onWillPop:() => _providerSummary.onWillPop(_context));
+        onWillPop: () => _providerSummary.onWillPop(_context));
+  }
+
+  Future<dynamic> helpLongPress(BuildContext context, String text) {
+    return showDialog(
+                                          context: context,
+                                          builder: (BuildContext context) {
+                                            return AlertDialog(
+                                              title: Text(text),
+                                              actions: <Widget>[
+                                                TextButton(
+                                                  child: Text('Cerrar'),
+                                                  onPressed: () {
+                                                    Navigator.of(context)
+                                                        .pop();
+                                                  },
+                                                ),
+                                              ],
+                                            );
+                                          },
+                                        );
   }
 }

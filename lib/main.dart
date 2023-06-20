@@ -24,7 +24,7 @@ class MyApp extends StatelessWidget {
       home: MultiProvider(
         child: LoginBasic(),
         providers: [
-        ChangeNotifierProvider.value(value: ProviderLogin(context, url: 'http://vps-2872295-x.dattaweb.com:8069', db: 'TEST_1', demo: true
+        ChangeNotifierProvider.value(value: ProviderLogin(context, url: 'http://vps-2872295-x.dattaweb.com:9069', db: 'TEST_1_dev', demo: true
         )),
       ],
 

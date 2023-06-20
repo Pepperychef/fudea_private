@@ -20,12 +20,10 @@ import '../data/daos/option_dao.dart';
 import '../utilities/future_daos.dart';
 
 class DailyVisits extends StatelessWidget {
-
   late ProviderVisitas _providerVisitas;
 
   @override
   Widget build(BuildContext context) {
-
     _providerVisitas = Provider.of<ProviderVisitas>(context);
 
     return Scaffold(
@@ -132,67 +130,68 @@ class DailyVisits extends StatelessWidget {
                         color: Colors.white,
                         child: ListView(
                           shrinkWrap: true,
-                          children: List.generate(_providerVisitas.visits.length, (index) {
+                          children: List.generate(
+                              _providerVisitas.visits.length, (index) {
                             return GestureDetector(
                               onTap: () async {
-                                if(!_providerVisitas.visits[index].guardado){
-
+                                if (!_providerVisitas.visits[index].guardado) {
                                   OptionDao optionDao =
-                                  await FutureDaos().optionDaoFuture();
+                                      await FutureDaos().optionDaoFuture();
                                   EvaluationDao evaluationDao =
-                                  await FutureDaos().evaluationDaoFuture();
+                                      await FutureDaos().evaluationDaoFuture();
 
                                   List<Evaluation> listEvaluation =
-                                  await evaluationDao
-                                      .findEvaluationsByVisitId(
-                                      _providerVisitas.visits[index].idProyecto);
+                                      await evaluationDao
+                                          .findEvaluationsByVisitId(
+                                              _providerVisitas
+                                                  .visits[index].idProyecto);
 
                                   List<Map<int, Option>> listOptions =
-                                  await fillOptions(
-                                      listEvaluation, optionDao);
+                                      await fillOptions(
+                                          listEvaluation, optionDao);
 
-                                  final directory = await getApplicationDocumentsDirectory();
+                                  final directory =
+                                      await getApplicationDocumentsDirectory();
                                   String _extraId = getIdByDateTime();
 
                                   List<List<Response>> listResponses =
-                                  List.generate(
-                                      listEvaluation.length, (index) => []);
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) {
-
-                                            return MultiProvider(
-                                            child: Summary(
-                                            localId: _providerVisitas.visits[index].idProyecto,
-                                            visit: _providerVisitas.visits[index],
-                                            visitPositon: index,
-                                            ),
-                                            providers: [
-                                            ChangeNotifierProvider.value(value: ProviderGrabadorResumen(
-                                            idEvaluation: _providerVisitas.visits[index].idProyecto,
-                                            visit: _providerVisitas.visits[index],
-                                              localFilePathEncuesta: _providerVisitas.localFilePathEncuesta,
-                                              localFilePath: _providerVisitas.localFilePathResumen+'${_providerVisitas.visits[index].idProyecto}'
-                                            )),
-                                            ChangeNotifierProvider.value(value: _providerVisitas),
-                                            ChangeNotifierProvider.value(
-                                            value: ProviderSummary()),
-                                            ChangeNotifierProvider.value(
-                                            value: ProviderEvaluacion(
-    listEvaluation:
-    listEvaluation,
-    listOptions:
-    listOptions,
-    listResponses:
-    listResponses))
-    ]);
-
-                                          } ));
-
+                                      List.generate(
+                                          listEvaluation.length, (index) => []);
+                                  Navigator.push(context,
+                                      MaterialPageRoute(builder: (context) {
+                                    return MultiProvider(
+                                        child: Summary(
+                                          localId: _providerVisitas
+                                              .visits[index].idProyecto,
+                                          visit: _providerVisitas.visits[index],
+                                          visitPositon: index,
+                                        ),
+                                        providers: [
+                                          ChangeNotifierProvider.value(
+                                              value: ProviderGrabadorResumen(
+                                                  idEvaluation: _providerVisitas
+                                                      .visits[index].idProyecto,
+                                                  visit: _providerVisitas
+                                                      .visits[index],
+                                                  localFilePathEncuesta:
+                                                      _providerVisitas
+                                                          .localFilePathEncuesta,
+                                                  localFilePath: _providerVisitas
+                                                          .localFilePathResumen +
+                                                      '${_providerVisitas.visits[index].idProyecto}')),
+                                          ChangeNotifierProvider.value(
+                                              value: _providerVisitas),
+                                          ChangeNotifierProvider.value(
+                                              value: ProviderSummary()),
+                                          ChangeNotifierProvider.value(
+                                              value: ProviderEvaluacion(
+                                                  listEvaluation:
+                                                      listEvaluation,
+                                                  listOptions: listOptions,
+                                                  listResponses: listResponses))
+                                        ]);
+                                  }));
                                 }
-
-
                               },
                               child: Card(
                                 margin: const EdgeInsets.symmetric(
@@ -211,20 +210,24 @@ class DailyVisits extends StatelessWidget {
                                       gradient: LinearGradient(
                                         begin: Alignment.centerLeft,
                                         end: Alignment.centerRight,
-                                        colors: _providerVisitas.visits[index].guardado? <Color>[
-                                          Colors.grey,
-                                          Colors.black45
-                                        ]: <Color>[
-                                          Color.fromRGBO(0, 96, 157, 1),
-                                          Color.fromRGBO(28, 59, 112, 1)
-                                        ],
+                                        colors: _providerVisitas
+                                                .visits[index].guardado
+                                            ? <Color>[
+                                                Colors.grey,
+                                                Colors.black45
+                                              ]
+                                            : <Color>[
+                                                Color.fromRGBO(0, 96, 157, 1),
+                                                Color.fromRGBO(28, 59, 112, 1)
+                                              ],
                                       )),
                                   child: Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        _providerVisitas.visits[index].nombreBeneficiario,
+                                        _providerVisitas
+                                            .visits[index].nombreBeneficiario,
                                         style: TextStyle(
                                             color: Colors.white70,
                                             fontSize: (MediaQuery.of(context)
@@ -233,7 +236,8 @@ class DailyVisits extends StatelessWidget {
                                                 46.5),
                                       ),
                                       Text(
-                                        _providerVisitas.visits[index].dirContacto,
+                                        _providerVisitas
+                                            .visits[index].dirContacto,
                                         style: TextStyle(
                                             color: Colors.white70,
                                             fontSize: (MediaQuery.of(context)
@@ -242,7 +246,8 @@ class DailyVisits extends StatelessWidget {
                                                 46.5),
                                       ),
                                       Text(
-                                        _providerVisitas.visits[index].telefonoContacto,
+                                        _providerVisitas
+                                            .visits[index].telefonoContacto,
                                         style: TextStyle(
                                             color: Colors.white70,
                                             fontSize: (MediaQuery.of(context)
@@ -251,7 +256,8 @@ class DailyVisits extends StatelessWidget {
                                                 46.5),
                                       ),
                                       Text(
-                                        _providerVisitas.visits[index].emailContacto,
+                                        _providerVisitas
+                                            .visits[index].emailContacto,
                                         style: TextStyle(
                                             color: Colors.white70,
                                             fontSize: (MediaQuery.of(context)
