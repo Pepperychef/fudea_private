@@ -23,16 +23,14 @@ class ProviderGrabadorEncuesta with ChangeNotifier {
 
   String valueRespuesta = '';
 
-  ProviderGrabadorEncuesta({
-    required this.visit,
-    required this.idEvaluation,
-    required this.localFilePath
-  }) {
+  ProviderGrabadorEncuesta(
+      {required this.visit,
+      required this.idEvaluation,
+      required this.localFilePath}) {
     init();
   }
 
   init() async {
-
     recording =
         FlutterAudioRecorder2(localFilePath, audioFormat: AudioFormat.WAV);
 
@@ -124,7 +122,7 @@ class ProviderGrabadorEncuesta with ChangeNotifier {
 
         notifyListeners();
       } else {
-        Scaffold.of(context).showSnackBar(
+        ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text("Debes aceptar los permisos")));
         //await PermissionsPlugin.requestPermissions([Permission.RECORD_AUDIO, Permission.WRITE_EXTERNAL_STORAGE]);
       }

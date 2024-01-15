@@ -296,9 +296,9 @@ Future<void> sendFilesToServer(
         await _evaluationDao.findEvaluationsByVisitId(visit.idProyecto);
 
     for (Evaluation evaluation in _listPreguntas) {
-      if(evaluation.tipo != 'seccion'){
-        List<Response> _tmp =
-        await _responseDao.findResponsesByEvaluationId(evaluation.idPregunta);
+      if (evaluation.tipo != 'seccion') {
+        List<Response> _tmp = await _responseDao
+            .findResponsesByEvaluationId(evaluation.idPregunta);
 
         Map respData = {
           "id_pregunta": _tmp.first.idEvaluation.toString(),
@@ -319,19 +319,18 @@ Future<void> sendFilesToServer(
     String arch_audio_resumen = '';
 
     for (Attachment att in attachments) {
-      if(att.type == 'img_acta'){
+      if (att.type == 'img_acta') {
         imgActa = await codifyBinary(att.binaryFile);
       }
-      if(att.type == 'img_evidencia'){
+      if (att.type == 'img_evidencia') {
         imgEvidencia = await codifyBinary(att.binaryFile);
       }
-      if(att.type == 'arch_audio'){
-        arch_audio = await codifyBinary(att.binaryFile+'.wav');
+      if (att.type == 'arch_audio') {
+        arch_audio = await codifyBinary(att.binaryFile + '.wav');
       }
-      if(att.type == 'arch_audio_summary'){
-        arch_audio_resumen = await codifyBinary(att.binaryFile+'.wav');
+      if (att.type == 'arch_audio_summary') {
+        arch_audio_resumen = await codifyBinary(att.binaryFile + '.wav');
       }
-
     }
 
     List<String> grabaciones = [];
@@ -340,11 +339,10 @@ Future<void> sendFilesToServer(
       grabaciones.add(arch_audio);
     }
     if (arch_audio_resumen != '') {
-
       grabaciones.add(arch_audio_resumen);
     }
 
-    if(arch_audio_resumen == arch_audio){
+    if (arch_audio_resumen == arch_audio) {
       print("son iguales los audios");
     }
     Map visitData = {
@@ -368,7 +366,7 @@ Future<void> sendFilesToServer(
   var response = await http.post(Uri.parse('${constantes.url}upload'),
       body: jsonEncode(
           <String, dynamic>{'idUsuario': idUsuario, 'visitas': visitas2}));
-    print(response.body);
+  print(response.body);
 
   await Future.delayed(const Duration(seconds: 2));
 

@@ -29,17 +29,15 @@ class ProviderGrabadorResumen with ChangeNotifier {
 
   String valueRespuesta = '';
 
-  ProviderGrabadorResumen({
-    required this.visit,
-    required this.idEvaluation,
-    required this.localFilePath,
-    required this.localFilePathEncuesta
-  }) {
+  ProviderGrabadorResumen(
+      {required this.visit,
+      required this.idEvaluation,
+      required this.localFilePath,
+      required this.localFilePathEncuesta}) {
     //init();
   }
 
   Future<void> init() async {
-
     recording =
         FlutterAudioRecorder2(localFilePath, audioFormat: AudioFormat.WAV);
 
@@ -105,7 +103,6 @@ class ProviderGrabadorResumen with ChangeNotifier {
 
   startRecording(BuildContext context) async {
     try {
-
       await init();
       print('test');
 
@@ -135,7 +132,7 @@ class ProviderGrabadorResumen with ChangeNotifier {
 
         notifyListeners();
       } else {
-        Scaffold.of(context).showSnackBar(
+        ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text("Debes aceptar los permisos")));
         //await PermissionsPlugin.requestPermissions([Permission.RECORD_AUDIO, Permission.WRITE_EXTERNAL_STORAGE]);
       }

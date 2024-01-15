@@ -99,7 +99,7 @@ class Home extends StatelessWidget {
                         whiteBackground: false,
                         child: contenidoBoton(
                             false,
-                            'Visitar Consultas Diarias',
+                            'Consultar Visitas Diarias',
                             false,
                             (MediaQuery.of(context).size.height) / 36.5),
                         onPressed: () async {
