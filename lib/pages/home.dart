@@ -18,10 +18,15 @@ class Home extends StatelessWidget {
   int userID;
   String userName;
   String user;
+  bool online;
 
   Constantes constantes = Constantes();
 
-  Home({required this.user, required this.userID, required this.userName});
+  Home(
+      {required this.user,
+      required this.userID,
+      required this.userName,
+      required this.online});
 
   @override
   Widget build(BuildContext context) {
@@ -103,53 +108,76 @@ class Home extends StatelessWidget {
                             false,
                             (MediaQuery.of(context).size.height) / 36.5),
                         onPressed: () async {
+                          if (online) {
+                            var response = await http.get(
+                              Uri.parse(constantes.url),
+                              headers: {'User-Id': '$userID'},
+                            );
 
-                          var response = await http.get(
-                            Uri.parse(constantes.url),
-                            headers: {'User-Id': '$userID'},
-                          );
+                            Map<String, dynamic> list =
+                                json.decode(response.body);
 
-                          Map<String, dynamic> list =
-                              json.decode(response.body);
-
-                          showDialog(
-                            context: context,
-                            barrierDismissible: false,
-                            builder: (context) => AlertDialog(
-                              content:
-                              Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: const [
-                                  // The loading indicator
-                                  CircularProgressIndicator(),
-                                  SizedBox(
-                                    height: 15,
-                                  ),
-                                  // Some text
-                                  Text('Cargando...')
-                                ],
+                            showDialog(
+                              context: context,
+                              barrierDismissible: false,
+                              builder: (context) => const AlertDialog(
+                                content: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    // The loading indicator
+                                    CircularProgressIndicator(),
+                                    SizedBox(
+                                      height: 15,
+                                    ),
+                                    // Some text
+                                    Text('Cargando...')
+                                  ],
+                                ),
                               ),
-                            ),
-                          );
+                            );
 
-                          handleLocationPermission(context).then((value){
+                            handleLocationPermission(context).then((value) {
+                              if (value) {
+                                saveData(list: list, context: context)
+                                    .then((value) {
+                                  Navigator.of(context).pop();
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder:
+                                              (context) =>
+                                                  MultiProvider(
+                                                      child: DailyVisits(),
+                                                      providers: [
+                                                        ChangeNotifierProvider.value(
+                                                            value:
+                                                                ProviderVisitas(
+                                                                    visits:
+                                                                        value))
+                                                      ])));
+                                });
+                              }
+                            });
+                          }else{
+                            loadData().then((value){
+                              Navigator.of(context).pop();
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder:
+                                          (context) =>
+                                          MultiProvider(
+                                              child: DailyVisits(),
+                                              providers: [
+                                                ChangeNotifierProvider.value(
+                                                    value:
+                                                    ProviderVisitas(
+                                                        visits:
+                                                        value))
+                                              ])));
+                            });
 
-                            if(value){
-                              saveData(list: list, context: context).then((value) {
-                                Navigator.of(context).pop();
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => MultiProvider(
-                                            child: DailyVisits(),
-                                            providers: [
-                                              ChangeNotifierProvider.value(value: ProviderVisitas(visits: value))
-                                            ])));
-                              });
-                            }
-
-                          });
-
+                          }
                         }),
                   ),
                   Container(
@@ -162,13 +190,15 @@ class Home extends StatelessWidget {
                         child: contenidoBoton(false, 'Enviar Progreso del Dia',
                             true, (MediaQuery.of(context).size.height) / 36.5),
                         onPressed: () {
-                          fetchSavedVisits().then((value){
+                          fetchSavedVisits().then((value) {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => SavedVisits(visits: value, idUsuario: userID,)));
+                                    builder: (context) => SavedVisits(
+                                          visits: value,
+                                          idUsuario: userID,
+                                        )));
                           });
-
                         }),
                   ),
                 ],

@@ -21,8 +21,11 @@ class LoginContent extends StatelessWidget {
         .add(SizedBox(height: MediaQuery.of(context).size.height * 0.01));
     elementosLista.add(emailField(context));
     elementosLista.add(passwordField(context));
+    elementosLista.add(rememberMeCheck(context));
     elementosLista.add(connectButton(context));
     elementosLista.add(separatorOr(context));
+    
+
 
     return Container(
         child: Padding(
@@ -41,11 +44,14 @@ class LoginContent extends StatelessWidget {
     return Container(
       width: MediaQuery.of(context).size.width,
       margin: const EdgeInsets.only(bottom: 8.0),
-      padding: EdgeInsets.only(right: 65.0, left: 15.0),
+      padding: const EdgeInsets.only(right: 65.0, left: 15.0),
       child: TextField(
         keyboardType: TextInputType.emailAddress,
         textAlign: TextAlign.center,
-        decoration: InputDecoration(
+        controller: TextEditingController(
+          text: _providerLogin.userName
+        ),
+        decoration: const InputDecoration(
             focusedBorder: UnderlineInputBorder(
                 borderSide: BorderSide(color: Colors.transparent)),
             hintText: "E-Mail",
@@ -66,14 +72,14 @@ class LoginContent extends StatelessWidget {
     return Container(
       width: MediaQuery.of(context).size.width,
       margin: const EdgeInsets.only(bottom: 8.0),
-      padding: EdgeInsets.only(right: 15.0, left: 15.0),
+      padding: const EdgeInsets.only(right: 15.0, left: 15.0),
       child: TextField(
         textAlign: TextAlign.center,
         obscureText: _providerLogin.hidePass,
         decoration: InputDecoration(
-          focusedBorder: UnderlineInputBorder(
+          focusedBorder: const UnderlineInputBorder(
               borderSide: BorderSide(color: Colors.transparent)),
-          prefixIcon: Icon(
+          prefixIcon: const Icon(
             Icons.vpn_key,
           ),
           hintText: "Contraseña",
@@ -99,9 +105,34 @@ class LoginContent extends StatelessWidget {
     );
   }
 
+  Widget rememberMeCheck(BuildContext context) {
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      margin: const EdgeInsets.only(bottom: 10.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          Checkbox(
+            value: _providerLogin.recordarme,
+            onChanged: (value) {
+              _providerLogin.recordarme = value;
+            },
+            checkColor: Colors.blueGrey,
+            activeColor: Colors.blueGrey,
+          ),
+          Text(
+            'Recuerdame',
+            style: TextStyle(color: Colors.blueGrey),
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget connectButton(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(top: 20),
+      margin: const EdgeInsets.only(top: 20),
       width: (MediaQuery.of(context).size.width) / 1.5,
       child: SigninButton(
           child: contenidoBoton(_providerLogin.cargando, 'Conectar', false, (MediaQuery.of(context).size.height) / 26.5),
@@ -126,7 +157,7 @@ class LoginContent extends StatelessWidget {
               print('si se cumplen condiciones para logearse');
             } else {
               print('no se cumplen condiciones para logearse');
-              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                   content: Text(
                       'Verifique E-Mail, Contraseña y conexión a internet')));
             }
@@ -158,25 +189,9 @@ class LoginContent extends StatelessWidget {
             } else {
               print('no se cumplen condiciones para logearse');
               ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('Verifique conexión a internet')));
+                  const SnackBar(content: Text('Verifique conexión a internet')));
             }
           }),
-    );
-  }
-
-  Widget rememberMeCheck(BuildContext context) {
-    return Container(
-      width: MediaQuery.of(context).size.width,
-      margin: const EdgeInsets.only(bottom: 10.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget>[
-          Text(
-            'Recuerdame',
-          ),
-        ],
-      ),
     );
   }
 
@@ -186,19 +201,19 @@ class LoginContent extends StatelessWidget {
       Expanded(
         child: Container(
             margin: const EdgeInsets.only(left: 10.0, right: 15.0),
-            child: Divider(
+            child: const Divider(
               thickness: 1,
               indent: 20,
               height: 60,
             )),
       ),
-      Text(
+      const Text(
         "O",
       ),
       Expanded(
         child: Container(
             margin: const EdgeInsets.only(left: 15.0, right: 10.0),
-            child: Divider(
+            child: const Divider(
               thickness: 1,
               endIndent: 20,
               height: 60,

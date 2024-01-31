@@ -121,10 +121,10 @@ class ProviderSummary with ChangeNotifier{
                         });
                         Navigator.pop(context);
                       },
-                      child: Column(
+                      child: const Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisAlignment: MainAxisAlignment.center,
-                        children: const <Widget>[
+                        children:  <Widget>[
                            Icon(
                             Icons.perm_media,
                             color: Colors.black54,
@@ -162,10 +162,10 @@ class ProviderSummary with ChangeNotifier{
                         });
                         Navigator.pop(context);
                       },
-                      child: Column(
+                      child: const Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisAlignment: MainAxisAlignment.center,
-                        children: const <Widget>[
+                        children: <Widget>[
                           Icon(
                             Icons.camera_alt,
                             color: Colors.black54,

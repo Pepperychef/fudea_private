@@ -202,6 +202,12 @@ Future<List<Visit>> fetchSavedVisits() async {
   return visitasGuardadas;
 }
 
+Future<List<Visit>> loadData() async{
+  VisitDao visitDao = await FutureDaos().visitDaoFuture();
+  List<Visit> listResponse = await visitDao.findEverything();
+  return listResponse;
+}
+
 Future<List<Visit>> saveData(
     {required Map<String, dynamic> list, required BuildContext context}) async {
   List list1 = list['VISITAS'];

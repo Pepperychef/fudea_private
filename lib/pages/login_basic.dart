@@ -106,6 +106,8 @@ class LoginBasic extends StatelessWidget {
                         child: TextField(
                           keyboardType: TextInputType.emailAddress,
                           textAlign: TextAlign.center,
+                          controller: _providerLogin.controllerUser,
+                          readOnly: !_providerLogin.checkConnection,
                           decoration: const InputDecoration(
                               focusedBorder: UnderlineInputBorder(
                                   borderSide: BorderSide(color: Colors.transparent)),
@@ -115,9 +117,11 @@ class LoginBasic extends StatelessWidget {
                               )),
                           onSubmitted: (value) {
                             _providerLogin.userName = value.trim();
+                            _providerLogin.controllerUser.text = value.trim();
                           },
                           onChanged: (value) {
                             _providerLogin.userName = value.trim();
+                            _providerLogin.controllerUser.text = value.trim();
                           },
                         ),
                       ),
@@ -128,6 +132,8 @@ class LoginBasic extends StatelessWidget {
                         child: TextField(
                           textAlign: TextAlign.center,
                           obscureText: _providerLogin.hidePass,
+                          controller: _providerLogin.controllerPassword,
+                          readOnly: !_providerLogin.checkConnection,
                           decoration: InputDecoration(
                             focusedBorder:const  UnderlineInputBorder(
                                 borderSide: BorderSide(color: Colors.transparent)),
@@ -149,17 +155,44 @@ class LoginBasic extends StatelessWidget {
                           ),
                           onSubmitted: (value) {
                             _providerLogin.pass = value;
+                            _providerLogin.controllerPassword.text = value;
                           },
                           onChanged: (value) {
                             _providerLogin.pass = value;
+                            _providerLogin.controllerPassword.text = value;
                           },
                         ),
                       ),
+
+                      _providerLogin.checkConnection?
+                      Container(
+                        width: MediaQuery.of(context).size.width,
+                        margin: const EdgeInsets.only(bottom: 10.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: <Widget>[
+                            Checkbox(
+                              value: _providerLogin.recordarme,
+                              onChanged: (value) {
+                                _providerLogin.recordarme = value;
+                              },
+                              checkColor: const Color.fromRGBO(28, 59, 112, 1),
+                              activeColor: const Color.fromRGBO(28, 59, 112, 1),
+                            ),
+                            const Text(
+                              'Recuerdame',
+                              style: TextStyle(color: Color.fromRGBO(28, 59, 112, 1),),
+                            ),
+                          ],
+                        ),
+                      ):Container(),
+
                       Container(
                         margin: const EdgeInsets.only(top: 20),
                         width: (MediaQuery.of(context).size.width) / 1.5,
                         child: SigninButton(whiteBackground: true,
-                            child: contenidoBoton(_providerLogin.cargando, 'Log In', true,(MediaQuery.of(context).size.height) / 36.5),
+                            child: contenidoBoton(_providerLogin.cargando, _providerLogin.checkConnection?'Log In': 'Offline Log In', true,(MediaQuery.of(context).size.height) / 36.5),
                             onPressed: () async {
                               if (!_providerLogin.cargando &&
                                   _providerLogin.userName.isNotEmpty &&
