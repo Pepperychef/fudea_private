@@ -121,7 +121,6 @@ class LoginBasic extends StatelessWidget {
                           },
                           onChanged: (value) {
                             _providerLogin.userName = value.trim();
-                            _providerLogin.controllerUser.text = value.trim();
                           },
                         ),
                       ),
@@ -159,7 +158,6 @@ class LoginBasic extends StatelessWidget {
                           },
                           onChanged: (value) {
                             _providerLogin.pass = value;
-                            _providerLogin.controllerPassword.text = value;
                           },
                         ),
                       ),

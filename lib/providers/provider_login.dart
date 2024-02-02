@@ -115,6 +115,7 @@ class ProviderLogin with ChangeNotifier{
             SharedPreferencesManager.setUserName(_resp.toJson()['userName'].toString());
           }
 
+          Navigator.of(context).pop();
 
 
           Navigator.push(context, MaterialPageRoute(
@@ -133,6 +134,7 @@ class ProviderLogin with ChangeNotifier{
       notifyListeners();
     }else{
       if(userName != ''){
+        Navigator.of(context).pop();
         Navigator.push(context, MaterialPageRoute(
             builder: (context) => Home(
               user: userName,

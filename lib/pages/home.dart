@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:fudea/pages/daily_visits.dart';
 import 'package:fudea/pages/saved_visits.dart';
 import 'package:fudea/providers/provider_visitas.dart';
+import 'package:fudea/utilities/conexiones.dart';
 import 'package:fudea/utilities/constantes.dart';
 import 'package:fudea/utilities/tools.dart';
 import 'package:fudea/widgets/home_buttons.dart';
@@ -108,6 +109,7 @@ class Home extends StatelessWidget {
                             false,
                             (MediaQuery.of(context).size.height) / 36.5),
                         onPressed: () async {
+                          online = await Conexiones.checkConection();
                           if (online) {
                             var response = await http.get(
                               Uri.parse(constantes.url),
