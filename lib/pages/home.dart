@@ -162,7 +162,7 @@ class Home extends StatelessWidget {
                             });
                           }else{
                             loadData().then((value){
-                              Navigator.of(context).pop();
+                              //Navigator.of(context).pop();
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
